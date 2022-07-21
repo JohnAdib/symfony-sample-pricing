@@ -1,0 +1,74 @@
+# version of compose
+version: "3.8"
+# name: symfony-sample1
+# list of volumes and named them
+volumes:
+  # ********** nginx
+  nginx_log:
+  # ********** redis
+  redis_data:
+# list of networks
+networks:
+  qanat:
+    driver: bridge
+# list of services
+services:
+# -------------------------------------------------- nginx
+  nginx:
+    container_name: nginx
+    build:
+      context: .
+      dockerfile: ./docker/nginx/Dockerfile
+    hostname: ${NGINX_HOSTNAME}
+    restart: always
+    ports:
+      - "80:80"
+      - "443:443"
+    tty: true
+    extra_hosts:
+        - "symfony-sample1.local:127.0.0.1"
+    volumes:
+      - nginx_log:/var/log/nginx
+      - ./src/:/var/www/html/
+    environment:
+      TZ: ${TIMEZONE}
+    networks:
+      - qanat
+    depends_on:
+      - php
+# -------------------------------------------------- php
+  php:
+    container_name: php
+    build:
+      context: .
+      dockerfile: docker/php/Dockerfile
+    hostname: ${PHP_HOSTNAME}
+    restart: always
+    tty: true
+    volumes:
+      - ./src/:/var/www/html/
+      # - .docker/php/conf/local.ini:/usr/local/etc/php/conf.d/local.ini
+    environment:
+      TZ: ${TIMEZONE}
+      SERVICE_NAME: app
+      SERVICE_TAGS: dev
+    networks:
+      - qanat
+    depends_on:
+      - redis
+# -------------------------------------------------- redis
+  redis:
+    container_name: redis
+    image: redis:latest
+    restart: always
+    # ports:
+      # - 6379:6379
+    command: ["redis-server", "--appendonly", "yes"]
+    volumes:
+      - redis_data:/data
+    environment:
+      TZ: ${TIMEZONE}
+    networks:
+      - qanat
+#
+# eol
