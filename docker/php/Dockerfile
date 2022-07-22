@@ -31,12 +31,18 @@ RUN apt install -y libmagickwand-dev --no-install-recommends
 RUN echo '' | pecl install imagick
 RUN docker-php-ext-enable imagick
 
-# Install composer
-RUN curl -sS https://getcomposer.org/installer | php -- --install-dir=/usr/local/bin --filename=composer
-
 # Install symfony cli
 RUN curl -1sLf 'https://dl.cloudsmith.io/public/symfony/stable/setup.deb.sh' | bash
-RUN apt install symfony-cli
+RUN apt install -y symfony-cli
+
+# Install yarn
+RUN apt install -y yarn
+
+# Install npm for tailwind
+RUN apt install -y npm
+
+# Install composer
+RUN curl -sS https://getcomposer.org/installer | php -- --install-dir=/usr/local/bin --filename=composer
 
 # update package list
 RUN apt -y update
@@ -59,7 +65,7 @@ RUN groupadd -g 1000 www
 RUN useradd -u 1000 -ms /bin/bash -g www www
 
 # Copy existing application directory contents
-# COPY . /var/www
+COPY src/ /var/www/html/
 
 # Copy existing application directory permissions
 # COPY --chown=www:www . /var/www
@@ -70,3 +76,5 @@ RUN useradd -u 1000 -ms /bin/bash -g www www
 # Expose port 9000 and start php-fpm server
 # EXPOSE 9000
 # CMD ["php-fpm"]
+
+RUN composer install
