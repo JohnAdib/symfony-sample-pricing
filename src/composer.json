@@ -17,6 +17,7 @@
         "ext-ctype": "*",
         "ext-iconv": "*",
         "phpoffice/phpspreadsheet": "^1.24",
+        "snc/redis-bundle": "^4.2",
         "symfony/asset": "6.1.*",
         "symfony/console": "6.1.*",
         "symfony/dotenv": "6.1.*",
