@@ -73,8 +73,8 @@ COPY src/ /var/www/html/
 # Change current user to www
 # USER www
 
+RUN composer install --prefer-install=dist
+
 # Expose port 9000 and start php-fpm server
 # EXPOSE 9000
 # CMD ["php-fpm"]
-
-RUN composer install

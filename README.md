@@ -26,12 +26,62 @@ If something is unclear regarding the scope of the assignment, you can make reas
 3. Install & setting up the Symfony framework + Twig and test-pack
 4. The [PhpSpreadsheet](https://github.com/PHPOffice/PhpSpreadsheet) library is chosen to read the Excel file because it is significantly updated compared to the other options.
 5. Analyzed excel data and create datalist-analyzed.xlsx
+6. Add a class to save each serverInfo
+7. Read Excel Data and save each item inside one instance object of serverInfo class
+8. wait...
 
+## Install Dependencies - Docker & git
 
-## Installation
+First, update your existing list of packages
 
-Clone the repository somewhere, then run below command.
+```sudo apt update```
+
+Next, install a few prerequisite packages which let apt use packages over HTTPS
+
+```sudo apt install apt-transport-https ca-certificates curl software-properties-common```
+
+Then add the GPG key for the official Docker repository to your system
+
+```curl -fsSL https://download.docker.com/linux/ubuntu/gpg | sudo gpg --dearmor -o /usr/share/keyrings/docker-archive-keyring.gpg```
+
+Add the Docker repository to APT sources
+
+```echo "deb [arch=$(dpkg --print-architecture) signed-by=/usr/share/keyrings/docker-archive-keyring.gpg] https://download.docker.com/linux/ubuntu $(lsb_release -cs) stable" | sudo tee /etc/apt/sources.list.d/docker.list > /dev/null```
+
+Update your existing list of packages again for the addition to be recognized
+
+```sudo apt update```
+
+Make sure you are about to install from the Docker repo instead of the default Ubuntu repo
+
+```apt-cache policy docker-ce```
+
+Finally, install Docker, Docker compose and Git
+
+```sudo apt install -y docker-ce docker-compose-plugin git```
+
+## Install Project - Clone git and run via docker compose
+
+Clone the repository somewhere with below command.
+
+```git clone https://github.com/MrJavadAdib/symfony-sample-pricing.git```
+
+Go to cloned folder
+
+```cd symfony-sample-pricing```
+
+try to run docker. it takes some minute to do everything. > 7 min for first run
 
 ```docker compose up --build```
 
-then run ip or point some url.
+If you wanna to run containers in the background use below command - detached mode
+
+```docker compose up --build -d```
+
+If you have problem with composer, you must find *CONTAINER ID* with `docker ps` command. Then run `docker exec -it 123`. Then you are inside container, so run `composer install`. now installation is done.
+
+Open IP address or point some URL to server. For temporary usage below domain is connected.
+
+- https://symfony1.mradib.com/
+- https://symfony1.mradib.com/api
+- https://symfony1.mradib.com/api/pricing
