@@ -1,8 +1,8 @@
 <?php
-// src/Lib/ServerInfo.php
+// src/Lib/DataStructure/ServerInfo.php
 declare(strict_types=1);
 
-namespace App\Lib;
+namespace App\Lib\DataStructure;
 
 /**
  *  Save each item of server detail
