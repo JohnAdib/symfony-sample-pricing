@@ -1,6 +1,15 @@
 {
     "type": "project",
-    "license": "proprietary",
+    "name": "mradib/symfony-sample-pricing",
+    "description": "This is a simple program with Symfony that uses an Excel file as a data source and presents the data as an API with filtering capabilities.",
+    "version": "1.0.0",
+    "homepage": "https://github.com/MrJavadAdib/symfony-sample-pricing",
+    "authors": [{
+        "name": "Javad Adib",
+        "email": "Mr.Javad.Adib@gmail.com",
+        "homepage": "https://MrAdib.com"
+    }],
+    "license": "MIT",
     "minimum-stability": "stable",
     "prefer-stable": true,
     "require": {
@@ -8,12 +17,15 @@
         "ext-ctype": "*",
         "ext-iconv": "*",
         "phpoffice/phpspreadsheet": "^1.24",
+        "symfony/asset": "6.1.*",
         "symfony/console": "6.1.*",
         "symfony/dotenv": "6.1.*",
+        "symfony/filesystem": "6.1.*",
         "symfony/flex": "^2",
         "symfony/framework-bundle": "6.1.*",
         "symfony/runtime": "6.1.*",
         "symfony/twig-bundle": "6.1.*",
+        "symfony/webpack-encore-bundle": "^1.15",
         "symfony/yaml": "6.1.*",
         "twig/extra-bundle": "^2.12|^3.0",
         "twig/twig": "^2.12|^3.0"
