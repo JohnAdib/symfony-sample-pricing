@@ -2,7 +2,7 @@
 // src/Lib/Reader/Read.php
 namespace App\Lib\Reader;
 
-use App\Lib\Reader\PrepareServerDataFromJson;
+
 use App\Lib\DataStructure\Filters;
 
 
@@ -21,7 +21,9 @@ class Read
     private string $ADDR_ABSOLUTE_JSON;
 
     private array $dataset;
-    private array $filters;
+
+    // on start filters is empty
+    private array $filters = [];
 
 
     /**
@@ -40,6 +42,7 @@ class Read
 
         $this->loadDataFormJson();
     }
+
 
     /**
      * return data inside array of objects
@@ -93,19 +96,43 @@ class Read
     }
 
 
-
+    /**
+     * append new filter to old ones, create array of filter
+     * used for ram or brand
+     *
+     * @param string $field
+     * @param string|integer $query
+     * @return void
+     */
     public function addFilter(string $field, string|int $query): void
     {
         $this->filters[$field][] = $query;
     }
 
 
+    /**
+     * remove old filters and only use this one
+     * used for hdd and location
+     *
+     * @param string $field
+     * @param string|integer $query
+     * @return void
+     */
     public function onlyFilter(string $field, string|int $query): void
     {
         $this->filters[$field] = [$query];
     }
 
 
+    /**
+     * apply range filter to data,
+     * used for storage or price
+     *
+     * @param string $field
+     * @param string|integer|float $min
+     * @param string|integer|float $max
+     * @return void
+     */
     public function onlyFilterRange(string $field, string|int|float $min, string|int|float $max): void
     {
         $this->filters[$field] = ['min' => $min, 'max' => $max];
