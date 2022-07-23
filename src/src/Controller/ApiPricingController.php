@@ -5,7 +5,7 @@ namespace App\Controller;
 use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
-use App\Lib\ImportFromExcel;
+use App\Lib\LoadData;
 
 
 class ApiPricingController extends AbstractController
@@ -13,11 +13,20 @@ class ApiPricingController extends AbstractController
     #[Route('/api/pricing')]
     public function info(): JsonResponse
     {
-        // read data from excel and save in array of objects
-        $importObj = new ImportFromExcel();
-        $datalist = $importObj->saveInJson();
+        // try
+        {
+            // read data from excel and save in array of objects
+            $importObj = new LoadData();
 
-        // return json of result
-        return $this->json($datalist);
+            // get dataset
+            $datalist = $importObj->dataset();
+
+            // return json of result
+            return $this->json($datalist);
+        }
+        // catch (\exception $e)
+        // {
+        //     return $this->json($e->getMessage(), $status = 506);
+        // }
     }
 }
