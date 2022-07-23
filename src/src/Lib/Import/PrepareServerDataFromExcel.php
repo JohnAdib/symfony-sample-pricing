@@ -1,8 +1,8 @@
 <?php
-// src/Lib/DataStructure/PrepareServerDataFromExcel.php
+// src/Lib/Import/PrepareServerDataFromExcel.php
 declare(strict_types=1);
 
-namespace App\Lib\DataStructure;
+namespace App\Lib\Import;
 
 use App\Lib\DataStructure\Server;
 
@@ -61,7 +61,7 @@ class PrepareServerDataFromExcel
         // save output inside array
         $output =
         [
-          'servers'   => $result,
+          'servers'         => $result,
           'groupbyStorage'  => $filterStorage,
           'groupbyRam'      => $filterRam,
           'groupbyHdd'      => $filterHdd,
