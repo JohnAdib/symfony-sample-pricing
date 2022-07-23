@@ -3,17 +3,86 @@
 namespace App\Lib;
 
 use App\Lib\DataStructure\ServerInfo;
+use Symfony\Component\Filesystem\Filesystem;
+use Symfony\Component\Serializer\Encoder\JsonEncoder;
+use Symfony\Component\Serializer\Normalizer\ObjectNormalizer;
+use Symfony\Component\Serializer\Serializer;
+
 
 class ImportFromExcel
 {
-    private const EXCEL_DATALIST_PATH = '/Lib/datalist.xlsx';
+    // constants
+    private const EXCEL_FILE_NAME = 'datalist.xlsx';
+    private const FILE_RELATIVE_PATH = '/Lib/File/';
+    // location of excel file
+    private readonly string $EXCEL_ABSOLUTE_PATH;
+    private string $jsonPath;
+    
 
     /**
-     * do nothing
+     * set absolute path of excel file
      */
     public function __construct()
     {
-        // do nothing
+        $this->EXCEL_ABSOLUTE_PATH = dirname(__DIR__). self::FILE_RELATIVE_PATH. self::EXCEL_FILE_NAME;
+    }
+
+    public function saveInJson(): array
+    {
+        // create object of filesystem
+        $filesystem = new Filesystem();
+        // check if xlsx file exist
+        if($filesystem->exists($this->EXCEL_ABSOLUTE_PATH))
+        {
+            // get md5 of xlsx and create json path from that
+            $jsonFileName = self::xlsxMd5(). '.json';
+            $jsonFilePath = dirname(__DIR__). self::FILE_RELATIVE_PATH. 'tmp-'. $jsonFileName;
+
+            // create serializer object
+            $encoders = [new JsonEncoder()];
+            $normalizers = [new ObjectNormalizer()];
+            $serializer = new Serializer($normalizers, $encoders);
+
+            // check json file status
+            if($filesystem->exists($jsonFilePath))
+            {
+                // read from json
+                $jsonContent = file_get_contents($jsonFilePath);
+                var_dump($jsonContent);
+                exit();
+
+                $datalist = $serializer->deserialize($jsonContent, ServerInfo::class, 'json');
+                var_dump($datalist);
+                exit();
+            }
+            else
+            {
+                // json is not exist, so read excel
+                $datalist = $this->import();
+
+                // serialize datalist to json
+                $jsonContent = $serializer->serialize($datalist, 'json');
+                // save json
+                $filesystem->dumpFile($jsonFilePath, $jsonContent);
+
+                // return datalist
+                return $datalist;
+            }
+        }
+        return null;
+    }
+
+
+    private function xlsxMd5(): string
+    {
+        $filesystem = new Filesystem();
+
+        if($filesystem->exists($this->EXCEL_ABSOLUTE_PATH))
+        {
+            return md5_file($this->EXCEL_ABSOLUTE_PATH);
+        }
+
+        return null;
     }
 
 
@@ -43,7 +112,7 @@ class ImportFromExcel
      */
     private function readExcel(): array
     {
-        $filePath = dirname(__DIR__). self::EXCEL_DATALIST_PATH;
+        $filePath = $this->EXCEL_ABSOLUTE_PATH;
         $sheetname = 'Sheet2';
 
         // Identify the type of $filePath

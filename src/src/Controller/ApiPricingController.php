@@ -15,7 +15,7 @@ class ApiPricingController extends AbstractController
     {
         // read data from excel and save in array of objects
         $importObj = new ImportFromExcel();
-        $datalist = $importObj->import();
+        $datalist = $importObj->saveInJson();
 
         // return json of result
         return $this->json($datalist);
