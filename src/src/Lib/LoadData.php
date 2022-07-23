@@ -18,7 +18,8 @@ class LoadData
     private const ADDR_FOLDER_PATH = '/Lib/File/';
     // location of excel file
     private string $ADDR_ABSOLUTE_PATH_EXCEL;
-    private string $ADDR_ABSOLUTE_PATH_JSON;
+    private string $ADDR_ABSOLUTE_PATH_JSON_PREFIX;
+    private string $ADDR_ABSOLUTE_PATH_JSON_FULL;
 
 
     /**
@@ -38,7 +39,8 @@ class LoadData
         // get md5 of xlsx and create json path from that
         $jsonFileName = self::getExcelMd5();
         // save absolute path of temp json
-        $this->ADDR_ABSOLUTE_PATH_JSON = dirname(__DIR__). self::ADDR_FOLDER_PATH. 'tmp-'. $jsonFileName;
+        $this->ADDR_ABSOLUTE_PATH_JSON_PREFIX = dirname(__DIR__). self::ADDR_FOLDER_PATH. 'tmp-'. $jsonFileName;
+        $this->ADDR_ABSOLUTE_PATH_JSON_FULL = $this->ADDR_ABSOLUTE_PATH_JSON_PREFIX. '-servers.json';
 
     }
 
@@ -63,10 +65,10 @@ class LoadData
     public function dataset(): array
     {
         // check json file status
-        if(file_exists($this->ADDR_ABSOLUTE_PATH_JSON))
+        if(file_exists($this->ADDR_ABSOLUTE_PATH_JSON_FULL))
         {
             // read from json
-            $jsonContent = file_get_contents($this->ADDR_ABSOLUTE_PATH_JSON);
+            $jsonContent = file_get_contents($this->ADDR_ABSOLUTE_PATH_JSON_FULL);
 
             // decode json to array
             $jsonDecoded = json_decode($jsonContent, true);
@@ -106,12 +108,12 @@ class LoadData
             $jsonContent = json_encode($dataArr);
 
             // save json
-            $jsonFullPath = $this->ADDR_ABSOLUTE_PATH_JSON. '-'. $group. '.json';
+            $jsonFullPath = $this->ADDR_ABSOLUTE_PATH_JSON_PREFIX. '-'. $group. '.json';
             file_put_contents($jsonFullPath, $jsonContent);
         }
 
         // return datalist
-        return $datalist;
+        return $datalist['servers'];
     }
 
 

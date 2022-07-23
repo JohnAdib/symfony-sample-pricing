@@ -61,7 +61,7 @@ class PrepareServerDataFromExcel
         // save output inside array
         $output =
         [
-          'datalist'   => $result,
+          'servers'   => $result,
           'byStorage'  => $filterStorage,
           'byRam'      => $filterRam,
           'byHdd'      => $filterHdd,
