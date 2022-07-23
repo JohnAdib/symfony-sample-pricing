@@ -82,6 +82,27 @@ If you have problem with composer, you must find *CONTAINER ID* with `docker ps`
 
 Open IP address or point some URL to server. For temporary usage below domain is connected.
 
-- https://symfony1.mradib.com/
-- https://symfony1.mradib.com/api
-- https://symfony1.mradib.com/api/pricing
+- <https://symfony1.mradib.com/>
+- <https://symfony1.mradib.com/api>
+
+Example of API with One Filters
+
+- <https://symfony1.mardib.com/api/pricing> #all records
+- <https://symfony1.mardib.com/api/pricing?hdd=ssd> # one filter - hdd
+- <https://symfony1.mardib.com/api/pricing?brand=hp> # one filter - brand
+- <https://symfony1.mardib.com/api/pricing?ram=8> # one filter - ram
+- <https://symfony1.mardib.com/api/pricing?location=AmsterdamAMS-01> # one filter - location
+- <https://symfony1.mardib.com/api/pricing?ram=8|32|64> # one filter - array - ram
+- <https://symfony1.mardib.com/api/pricing?hdd=ssd|sas>  # one filter - array - hdd
+- <https://symfony1.mardib.com/api/pricing?storage=960-1500> # one filter - range - storage
+- <https://symfony1.mardib.com/api/pricing?price=100-800> # one filter - range - storage
+
+Example of API with Multiple Filters
+
+- <https://symfony1.mardib.com/api/pricing?hdd=ssd&storage=300-500> # single hdd and storage range
+- <https://symfony1.mardib.com/api/pricing?hdd=ssd|sas&storage=300-1000> # hdd array and storage range
+
+Example of API - Complex scenarios
+
+- <https://symfony1.mardib.com/api/pricing?hdd=ssd|sas&storage=400-1000&AmsterdamAMS-01&ram=64> # hdd array and storage range and location and ram 64
+- <https://symfony1.mardib.com/api/pricing?hdd=ssd|sas&storage=400-1600&AmsterdamAMS-01&ram=96&brand=hp|dell&price=100-600> #hdd array and storage range and location and ram plus price and brand
