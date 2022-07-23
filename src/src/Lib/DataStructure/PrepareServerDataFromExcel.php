@@ -62,11 +62,11 @@ class PrepareServerDataFromExcel
         $output =
         [
           'servers'   => $result,
-          'byStorage'  => $filterStorage,
-          'byRam'      => $filterRam,
-          'byHdd'      => $filterHdd,
-          'byLocation' => $filterLocation,
-          'byBrand'    => $filterBrand,
+          'groupbyStorage'  => $filterStorage,
+          'groupbyRam'      => $filterRam,
+          'groupbyHdd'      => $filterHdd,
+          'groupbyLocation' => $filterLocation,
+          'groupbyBrand'    => $filterBrand,
         ];
 
         // return array of objects

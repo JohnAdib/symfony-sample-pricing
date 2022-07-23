@@ -64,25 +64,19 @@ class LoadData
      */
     public function dataset(): array
     {
-        // check json file status
-        if(file_exists($this->ADDR_ABSOLUTE_PATH_JSON_FULL))
-        {
-            // read from json
-            $jsonContent = file_get_contents($this->ADDR_ABSOLUTE_PATH_JSON_FULL);
+        $this->openAndReadExcelAndSaveAsJson();
 
-            // decode json to array
-            $jsonDecoded = json_decode($jsonContent, true);
+        // read from json
+        $jsonContent = file_get_contents($this->ADDR_ABSOLUTE_PATH_JSON_FULL);
 
-            // passed to prepare data to fill in object
-            $datalist = new PrepareServerDataFromJson($jsonDecoded);
-            $datalistArr = $datalist->dataset();
+        // decode json to array
+        $jsonDecoded = json_decode($jsonContent, true);
 
-            return $datalistArr;
-        }
+        // passed to prepare data to fill in object
+        $datalist = new PrepareServerDataFromJson($jsonDecoded);
+        $datalistArr = $datalist->dataset();
 
-
-        // json is not exist, so read excel
-        return $this->openAndReadExcelAndSaveAsJson();
+        return $datalistArr;
     }
 
 
@@ -94,6 +88,13 @@ class LoadData
      */
     public function openAndReadExcelAndSaveAsJson(): array
     {
+       // check json file status
+       if(file_exists($this->ADDR_ABSOLUTE_PATH_JSON_FULL))
+       {
+           // json is not exist, so read excel and generate json
+           return [true];
+       }
+
         // read data from excel and return array of unfiltered data
         $xlsxData = $this->readExcel();
 
