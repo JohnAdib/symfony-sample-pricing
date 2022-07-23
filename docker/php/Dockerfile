@@ -54,10 +54,6 @@ RUN mv "$PHP_INI_DIR/php.ini-production" "$PHP_INI_DIR/php.ini"
 # copy config of php to extend limits
 COPY docker/php/local.ini /usr/local/etc/php/conf.d/
 
-# This makes directory /var/www owned by www-data which is the default user for php-fpm.
-RUN chown -R www-data:www-data /var/www
-
-
 # for solve user problem
 # https://www.digitalocean.com/community/tutorials/how-to-set-up-laravel-nginx-and-mysql-with-docker-compose-on-ubuntu-20-04
 # Add user for laravel application
@@ -73,8 +69,12 @@ COPY src/ /var/www/html/
 # Change current user to www
 # USER www
 
-RUN composer install --prefer-install=dist
-
 # Expose port 9000 and start php-fpm server
 # EXPOSE 9000
 # CMD ["php-fpm"]
+
+
+# This makes directory /var/www owned by www-data which is the default user for php-fpm.
+RUN chown -R www-data:www-data /var/www/html
+RUN chmod -R 760 /var/www/html/src/Lib/File
+RUN composer install --prefer-install=dist
