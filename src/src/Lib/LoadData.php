@@ -36,7 +36,7 @@ class LoadData
         }
 
         // get md5 of xlsx and create json path from that
-        $jsonFileName = self::getExcelMd5(). '.json';
+        $jsonFileName = self::getExcelMd5();
         // save absolute path of temp json
         $this->ADDR_ABSOLUTE_PATH_JSON = dirname(__DIR__). self::ADDR_FOLDER_PATH. 'tmp-'. $jsonFileName;
 
@@ -99,13 +99,16 @@ class LoadData
         $preperadDataObj = new PrepareServerDataFromExcel($xlsxData);
         $datalist = $preperadDataObj->dataset();
 
-        // serialize datalist to json
-        $jsonContent = json_encode($datalist, JSON_PRETTY_PRINT);
-        // $jsonContent = json_encode($datalist);
+        foreach ($datalist as $group => $dataArr)
+        {
+            // serialize datalist to json
+            // $jsonContent = json_encode($dataArr, JSON_PRETTY_PRINT);
+            $jsonContent = json_encode($dataArr);
 
-
-        // save json
-        file_put_contents($this->ADDR_ABSOLUTE_PATH_JSON, $jsonContent);
+            // save json
+            $jsonFullPath = $this->ADDR_ABSOLUTE_PATH_JSON. '-'. $group. '.json';
+            file_put_contents($jsonFullPath, $jsonContent);
+        }
 
         // return datalist
         return $datalist;

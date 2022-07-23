@@ -31,6 +31,13 @@ class PrepareServerDataFromExcel
     {
         // variable to save final result
         $result = [];
+        // variables to save filters by index
+        $filterStorage  = [];
+        $filterRam      = [];
+        $filterHdd      = [];
+        $filterLocation = [];
+        $filterBrand    = [];
+
         // loop for each row
         foreach( $this->datalist as $row => $dataline )
         {
@@ -39,12 +46,31 @@ class PrepareServerDataFromExcel
                 // skip first line, because contain headers
                 continue;
             }
+            // analyze one server and extract detail added into object
+            $lineAnalyzedObj = $this->analyzeLine($row, $dataline);
+            $result[] = $lineAnalyzedObj;
 
-            $result[] = $this->analyzeLine($row, $dataline);
+            // save filters by index
+            $filterStorage [$lineAnalyzedObj->hddTotalCapacity][] = $lineAnalyzedObj->index;
+            $filterRam     [$lineAnalyzedObj->ramCapacity][]      = $lineAnalyzedObj->index;
+            $filterHdd     [$lineAnalyzedObj->hddType][]          = $lineAnalyzedObj->index;
+            $filterLocation[$lineAnalyzedObj->locationCity][]     = $lineAnalyzedObj->index;
+            $filterBrand   [$lineAnalyzedObj->modelBrand][]       = $lineAnalyzedObj->index;
         }
 
+        // save output inside array
+        $output =
+        [
+          'datalist'   => $result,
+          'byStorage'  => $filterStorage,
+          'byRam'      => $filterRam,
+          'byHdd'      => $filterHdd,
+          'byLocation' => $filterLocation,
+          'byBrand'    => $filterBrand,
+        ];
+
         // return array of objects
-        return $result;
+        return $output;
     }
 
 
