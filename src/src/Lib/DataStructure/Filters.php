@@ -117,7 +117,7 @@ class Filters extends Server
      */
     private function brand(array $cond): bool
     {
-        if(in_array($this->modelBrand, $cond))
+        if(in_array(mb_strtolower($this->modelBrand), $cond))
         {
             return true;
         }
@@ -151,7 +151,7 @@ class Filters extends Server
      */
     private function hdd(array $cond): bool
     {
-        if(in_array($this->hddType, $cond))
+        if(in_array(mb_strtolower($this->hddType), $cond))
         {
             return true;
         }
@@ -168,7 +168,7 @@ class Filters extends Server
      */
     private function location(array $cond): bool
     {
-        if(in_array($this->location, $cond))
+        if(in_array(mb_strtolower($this->location), $cond))
         {
             return true;
         }

@@ -106,7 +106,7 @@ class Read
      */
     public function addFilter(string $field, string|int $query): void
     {
-        $this->filters[$field][] = $query;
+        $this->filters[$field][] = mb_strtolower($query);
     }
 
 
@@ -120,7 +120,7 @@ class Read
      */
     public function onlyFilter(string $field, string|int $query): void
     {
-        $this->filters[$field] = [$query];
+        $this->filters[$field] = [mb_strtolower($query)];
     }
 
 
