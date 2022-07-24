@@ -14,9 +14,9 @@ class ApiPricingOneController extends AbstractController
     {
         // create sample info json
         $result =
-        [
-            'version'  => "1.0.0",
-        ];
+            [
+                'version'  => "1.0.0",
+            ];
 
         return $this->json($result);
     }

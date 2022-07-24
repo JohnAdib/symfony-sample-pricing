@@ -80,7 +80,7 @@ class Read
      *
      * @return array
      */
-    public function loadDataFormJson(): void
+    private function loadDataFormJson(): void
     {
         // read from json
         $jsonContent = file_get_contents($this->ADDR_ABSOLUTE_JSON);
