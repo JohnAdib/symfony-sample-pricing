@@ -4,18 +4,18 @@ This is a simple program that uses an Excel file as a data source and presents t
 
 ## Requirements
 
-- Unit test
-- Functional Test
-- A back-end!
-- API
+- [x] Unit test
+- [x] Functional Test
+- [x] A back-end!
+- [x] API
 
 ## Bonus points
 
-- Maintainable
-- Code quality
-- Application structure
-- User interface
-- Optimization - load times and rendering performance
+- [x] Maintainable
+- [x] Code quality
+- [x] Application structure
+- [ ] User interface
+- [ ] Optimization - load times and rendering performance
 
 If something is unclear regarding the scope of the assignment, you can make reasonable assumptions.
 
