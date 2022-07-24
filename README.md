@@ -28,7 +28,31 @@ If something is unclear regarding the scope of the assignment, you can make reas
 5. Analyzed excel data and create datalist-analyzed.xlsx
 6. Add a class to save each serverInfo
 7. Read Excel Data and save each item inside one instance object of serverInfo class
-8. wait...
+8. Add Import class to read excel and save inside JSON to improve performance. In the future we can add Redis or Memcached.
+9. Add Reader class to open JSON file and load all records.
+10. Add inherited class Filter extended from Server that apply and validate filters
+11. Add controllers of /api/pricing and connect them to Reader class and /api/pricing/import to Import class
+12. Handle get requests of /api/pricing and apply related filter on Reader class
+13. Write PHPUnit Unit tests
+14. Write PHPUnit Functional tests
+
+15. to be continued...
+
+## Run PHPUnit Test
+
+Tests is categorized as Unit test and Functional Test. So you can run each one or all together.
+
+### Run All tests
+
+```php bin/phpunit```
+
+### Run All Unit tests
+
+```php bin/phpunit tests/Unit```
+
+### Run All Functional tests
+
+```php bin/phpunit tests/Functional```
 
 ## Install Dependencies - Docker & git
 
