@@ -30,7 +30,7 @@ final class ReadTest extends TestCase
         // add some other filter
         $myReadObj->addFilter('ram', '32');
         $myReadObj->addFilter('ram', 64);
-        $myReadObj->addFilter('location', 'DallasDAL-10');
+        $myReadObj->addFilter('location', 'DAL-10');
         $myReadObj->addFilter('hdd', 'SSD');
         // force only once - example
         $myReadObj->onlyFilter('ram', '32');

@@ -28,6 +28,7 @@ final class ServerTest extends TestCase
         $this->assertClassHasAttribute('locationCity', Server::class);
         $this->assertClassHasAttribute('locationZone', Server::class);
         $this->assertClassHasAttribute('locationCode', Server::class);
+        $this->assertClassHasAttribute('locationZone', Server::class);
         $this->assertClassHasAttribute('price', Server::class);
         $this->assertClassHasAttribute('priceCurrency', Server::class);
         $this->assertClassHasAttribute('priceAmount', Server::class);
@@ -66,8 +67,9 @@ final class ServerTest extends TestCase
                         "hddType"          => "SATA2",
                         "location"         => "AmsterdamAMS-01",
                         "locationCity"     => "Amsterdam",
-                        "locationZone"     => "AMS",
+                        "locationIso"     => "AMS",
                         "locationCode"     => "01",
+                        "locationZone"     => "AMS-01",
                         "price"            => "€49.99",
                         "priceCurrency"    => "€",
                         "priceAmount"      => 49.99
@@ -90,8 +92,9 @@ final class ServerTest extends TestCase
                         "hddType"          => "SATA2",
                         "location"         => "AmsterdamAMS-01",
                         "locationCity"     => "Amsterdam",
-                        "locationZone"     => "AMS",
+                        "locationIso"     => "AMS",
                         "locationCode"     => "01",
+                        "locationZone"     => "AMS-01",
                         "price"            => "$49.99",
                         "priceCurrency"    => "$",
                         "priceAmount"      => 149.99
@@ -131,6 +134,7 @@ final class ServerTest extends TestCase
                 "Amsterdam",
                 "AMS",
                 "01",
+                "AMS-01",
                 "€49.99",
                 "€",
                 49.99
@@ -160,8 +164,8 @@ final class ServerTest extends TestCase
     public function testCreateNewObjectFromServerAndCheckData(): void
     {
         $validData = $this->sampleValidArray();
-        // check count of valid data is 19
-        $this->assertCount(19, $validData);
+        // check count of valid data is 20
+        $this->assertCount(20, $validData);
 
         // create instance of server with valid data
         $myServerObj = new Server(...$validData);
@@ -184,6 +188,9 @@ final class ServerTest extends TestCase
         $this->assertSame('SATA2', $myServerObj->hddType);
         // location
         $this->assertSame('AmsterdamAMS-01', $myServerObj->location);
+        $this->assertSame('AMS', $myServerObj->locationIso);
+        $this->assertSame('01', $myServerObj->locationCode);
+        $this->assertSame('AMS-01', $myServerObj->locationZone);
         // price
         $this->assertSame('€49.99', $myServerObj->price);
         $this->assertSame(49.99, $myServerObj->priceAmount);
@@ -210,6 +217,7 @@ final class ServerTest extends TestCase
                 "Amsterdam",
                 "AMS",
                 "01",
+                "AMS-01",
                 "€49.99",
                 "€",
                 49.99

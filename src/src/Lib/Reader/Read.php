@@ -4,7 +4,7 @@
 namespace App\Lib\Reader;
 
 use App\Lib\DataStructure\Filter;
-
+use App\Lib\Import\FromExcel;
 
 /**
  * Try load data from Json
@@ -36,7 +36,9 @@ class Read
 
         // check excel file exist
         if (!file_exists($this->ADDR_ABSOLUTE_JSON)) {
-            throw new \Exception("JsonFileNotExist");
+            // throw new \Exception("JsonFileNotExist");
+            // don't throw error, run import
+            new FromExcel();
         }
 
         $this->loadDataFormJson();

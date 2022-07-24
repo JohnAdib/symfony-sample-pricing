@@ -13,8 +13,8 @@ final class FilterTest extends TestCase
     public function testCreateNewObjectFromFilter(): void
     {
         $validData = $this->sampleValidArray();
-        // check count of valid data is 19
-        $this->assertCount(19, $validData);
+        // check count of valid data is 20
+        $this->assertCount(20, $validData);
 
         // create instance of server with valid data
         $myFilterObj = new Filter(...$validData);
@@ -37,6 +37,7 @@ final class FilterTest extends TestCase
         $this->assertSame('SATA2', $myFilterObj->hddType);
         // location
         $this->assertSame('AmsterdamAMS-01', $myFilterObj->location);
+        $this->assertSame('AMS-01', $myFilterObj->locationZone);
         // price
         $this->assertSame('€49.99', $myFilterObj->price);
         $this->assertSame(49.99, $myFilterObj->priceAmount);
@@ -87,6 +88,7 @@ final class FilterTest extends TestCase
                 "Amsterdam",
                 "AMS",
                 "01",
+                "AMS-01",
                 "€49.99",
                 "€",
                 49.99

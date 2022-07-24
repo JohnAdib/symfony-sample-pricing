@@ -32,8 +32,9 @@ class Server
     // get from location
     public readonly ?string $location,
     public readonly ?string $locationCity,
-    public readonly ?string $locationZone,
+    public readonly ?string $locationIso,
     public readonly ?string $locationCode,
+    public readonly ?string $locationZone,
     // get from price
     public readonly ?string $price,
     public readonly ?string $priceCurrency,

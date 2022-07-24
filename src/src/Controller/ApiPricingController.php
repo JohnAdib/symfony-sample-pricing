@@ -25,18 +25,20 @@ class ApiPricingController extends AbstractController
             foreach ($allParameters as $key => $value) {
                 // it's range so use range filter for example for ?storage=100-200
                 $range = explode("-", $value);
-                if (is_array($range) && count($range) === 2) {
-                    $datalist = $readertObj->onlyFilterRange($key, $range[0], $range[1]);
+                if (is_array($range) && count($range) === 2 && is_numeric($range[0]) && is_numeric($range[1])) {
+                    // add range filer
+                    $readertObj->onlyFilterRange($key, $range[0], $range[1]);
                 } else {
                     // check for array inside parameter for example for ?hdd=SSD|SAS|SATA2
                     $multipleItem = explode("|", $value);
                     if (is_array($multipleItem) && count($multipleItem) >= 2 && count($multipleItem) <= 10) {
                         foreach ($multipleItem as $index => $condition) {
-                            $datalist = $readertObj->addFilter($key, $condition);
+                            // add array filter
+                            $readertObj->addFilter($key, $condition);
                         }
                     } else {
                         // it's a simple filter and reset
-                        $datalist = $readertObj->onlyFilter($key, $value);
+                        $readertObj->onlyFilter($key, $value);
                     }
                 }
             }

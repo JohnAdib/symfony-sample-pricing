@@ -158,7 +158,7 @@ class Filter extends Server
      */
     private function location(array $cond): bool
     {
-        if (in_array(mb_strtolower($this->location), $cond)) {
+        if (in_array(mb_strtolower($this->locationZone), $cond)) {
             return true;
         }
 

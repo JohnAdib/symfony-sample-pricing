@@ -103,8 +103,9 @@ class PrepareServerDataFromExcel
     // location
     $location     = $datarowObj?->{'3'};
     $locationCity = null;
-    $locationZone = null;
+    $locationIso = null;
     $locationCode = null;
+    $locationZone = null;
     // price
     $price         = $datarowObj?->{'4'};
     $priceCurrency = null;
@@ -155,10 +156,12 @@ class PrepareServerDataFromExcel
     if ($location) {
       // extract location code
       $locationCode = substr($location, -2);
-      // extract location zone
-      $locationZone = substr($location, strpos($location, '-') - 3, 3);
+      // extract location iso
+      $locationIso = substr($location, strpos($location, '-') - 3, 3);
       // extract location cityName
       $locationCity = substr($location, 0, strpos($location, '-') - 3);
+      // extract location zone
+      $locationZone = $locationIso . '-' . $locationCode;
     }
 
     if ($price) {
@@ -195,8 +198,9 @@ class PrepareServerDataFromExcel
         // location
         $location,
         $locationCity,
-        $locationZone,
+        $locationIso,
         $locationCode,
+        $locationZone,
         // price
         $price,
         $priceCurrency,

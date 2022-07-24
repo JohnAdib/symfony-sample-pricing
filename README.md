@@ -118,7 +118,7 @@ Example of API with One Filters
 - <https://symfony1.mardib.com/api/pricing?hdd=ssd> # one filter - hdd
 - <https://symfony1.mardib.com/api/pricing?brand=hp> # one filter - brand
 - <https://symfony1.mardib.com/api/pricing?ram=8> # one filter - ram
-- <https://symfony1.mardib.com/api/pricing?location=AmsterdamAMS-01> # one filter - location
+- <https://symfony1.mardib.com/api/pricing?location=AMS-01> # one filter - location
 - <https://symfony1.mardib.com/api/pricing?ram=8|32|64> # one filter - array - ram
 - <https://symfony1.mardib.com/api/pricing?hdd=ssd|sas>  # one filter - array - hdd
 - <https://symfony1.mardib.com/api/pricing?storage=960-1500> # one filter - range - storage
@@ -131,5 +131,5 @@ Example of API with Multiple Filters
 
 Example of API - Complex scenarios
 
-- <https://symfony1.mardib.com/api/pricing?hdd=ssd|sas&storage=400-1000&AmsterdamAMS-01&ram=64> # hdd array and storage range and location and ram 64
-- <https://symfony1.mardib.com/api/pricing?hdd=ssd|sas&storage=400-1600&AmsterdamAMS-01&ram=96&brand=hp|dell&price=100-600> #hdd array and storage range and location and ram plus price and brand
+- <https://symfony1.mardib.com/api/pricing?hdd=ssd|sas&storage=400-1000&AMS-01&ram=64> # hdd array and storage range and location and ram 64
+- <https://symfony1.mardib.com/api/pricing?hdd=ssd|sas&storage=400-1600&AMS-01&ram=96&brand=hp|dell&price=100-600> #hdd array and storage range and location and ram plus price and brand
