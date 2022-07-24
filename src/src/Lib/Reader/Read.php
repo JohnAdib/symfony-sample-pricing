@@ -1,7 +1,7 @@
 <?php
 // src/Lib/Reader/Read.php
-namespace App\Lib\Reader;
 
+namespace App\Lib\Reader;
 
 use App\Lib\DataStructure\Filter;
 

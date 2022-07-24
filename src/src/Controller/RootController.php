@@ -9,7 +9,7 @@ use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 
 class RootController extends AbstractController
 {
-    #[Route('/')]
+    #[Route('/', methods: ['GET', 'HEAD'])]
     public function info(): Response
     {
         return $this->render('index.html.twig', []);

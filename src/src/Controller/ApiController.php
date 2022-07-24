@@ -9,7 +9,7 @@ use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 
 class ApiController extends AbstractController
 {
-    #[Route('/api')]
+    #[Route('/api', methods: ['GET', 'HEAD'])]
     public function info(): JsonResponse
     {
         // create sample info json
