@@ -9,6 +9,7 @@ use PHPUnit\Framework\TestCase;
 
 final class ServerTest extends TestCase
 {
+
     public function testServerCheckAllAttributesExist(): void
     {
         $this->assertClassHasAttribute('index', Server::class);
@@ -100,7 +101,6 @@ final class ServerTest extends TestCase
     }
 
 
-
     public function testCreateNewObjectFromServerObjectInvalidArray(): void
     {
         // expect type error because index is not int and string is passed
@@ -148,12 +148,72 @@ final class ServerTest extends TestCase
     }
 
 
-
     public function testCreateNewObjectFromServerWithIncorrectData(): void
     {
-        // expect type error because index is not int and string is passed
+        // expect type error because invalid data passed to class
         $this->expectError();
 
         $this->assertIsObject(new Server(1, 2, 3));
+    }
+
+
+    public function testCreateNewObjectFromServerAndCheckData(): void
+    {
+        $validData = $this->sampleValidArray();
+        // check count of valid data is 19
+        $this->assertCount(19, $validData);
+
+        // create instance of server with valid data
+        $myServerObj = new Server(...$validData);
+
+        // check object is instance of server
+        $this->assertInstanceOf(Server::class, $myServerObj);
+
+        // chech it's object
+        $this->assertIsObject($myServerObj);
+        // check data
+        // model
+        $this->assertSame('Dell R210Intel Xeon X3440', $myServerObj->model);
+        $this->assertSame('Dell', $myServerObj->modelBrand);
+        // ram
+        $this->assertSame('16GBDDR3', $myServerObj->ram);
+        $this->assertSame(16, $myServerObj->ramCapacity);
+        // hdd
+        $this->assertSame('2x2TBSATA2', $myServerObj->hdd);
+        $this->assertSame(4000, $myServerObj->hddTotalCapacity);
+        $this->assertSame('SATA2', $myServerObj->hddType);
+        // location
+        $this->assertSame('AmsterdamAMS-01', $myServerObj->location);
+        // price
+        $this->assertSame('€49.99', $myServerObj->price);
+        $this->assertSame(49.99, $myServerObj->priceAmount);
+    }
+
+
+    public function sampleValidArray(): array
+    {
+        return
+            [
+                1,
+                "Dell R210Intel Xeon X3440",
+                "Dell",
+                "X3440",
+                "16GBDDR3",
+                16,
+                "3",
+                "2x2TBSATA2",
+                2,
+                2000,
+                4000,
+                "SATA2",
+                "AmsterdamAMS-01",
+                "Amsterdam",
+                "AMS",
+                "01",
+                "€49.99",
+                "€",
+                49.99
+
+            ];
     }
 }
