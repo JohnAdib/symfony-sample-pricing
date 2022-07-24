@@ -2,11 +2,11 @@
 
 declare(strict_types=1);
 
-namespace App\Tests\Controller;
+namespace App\Tests\Functional\Controller;
 
 use Symfony\Bundle\FrameworkBundle\Test\WebTestCase;
 
-class RootController extends WebTestCase
+class RootControllerTest extends WebTestCase
 {
     public function testRouteApiRootUrl()
     {

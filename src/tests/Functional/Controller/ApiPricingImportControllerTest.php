@@ -2,11 +2,11 @@
 
 declare(strict_types=1);
 
-namespace App\Tests\Controller;
+namespace App\Tests\Functional\Controller;
 
 use Symfony\Bundle\FrameworkBundle\Test\WebTestCase;
 
-class ApiPricingImportController extends WebTestCase
+class ApiPricingImportControllerTest extends WebTestCase
 {
     public function testRouteApiPricingImportUrl()
     {

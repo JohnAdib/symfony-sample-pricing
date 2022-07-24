@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace App\Tests\Lib\Reader;
+namespace App\Tests\Unit\Lib\Reader;
 
 use App\Lib\Reader\Read;
 use PHPUnit\Framework\TestCase;

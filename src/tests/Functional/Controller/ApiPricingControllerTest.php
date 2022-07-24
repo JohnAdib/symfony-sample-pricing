@@ -2,12 +2,12 @@
 
 declare(strict_types=1);
 
-namespace App\Tests\Controller;
+namespace App\Tests\Functional\Controller;
 
 use App\Lib\Import\FromExcel;
 use Symfony\Bundle\FrameworkBundle\Test\WebTestCase;
 
-class ApiPricingController extends WebTestCase
+class ApiPricingControllerTest extends WebTestCase
 {
 
     private const TOTAL_RECORD_FILTER_HDD_SAS = 11;

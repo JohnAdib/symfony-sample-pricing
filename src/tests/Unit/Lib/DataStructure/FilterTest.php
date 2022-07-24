@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace App\Tests\Lib\DataStructure;;
+namespace App\Tests\Unit\Lib\DataStructure;;
 
 use App\Lib\DataStructure\Filter;
 use PHPUnit\Framework\TestCase;
