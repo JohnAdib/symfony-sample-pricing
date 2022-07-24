@@ -16,6 +16,9 @@ This is a simple program that uses an Excel file as a data source and presents t
 - [x] Application structure
 - [ ] User interface
 - [ ] Optimization - load times and rendering performance
+  - [x] Convert excel file to JSON
+  - [ ] Use Redis or Memcached
+  - [x] Set HTTP Cache
 
 If something is unclear regarding the scope of the assignment, you can make reasonable assumptions.
 

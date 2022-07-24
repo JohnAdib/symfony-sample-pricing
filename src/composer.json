@@ -19,6 +19,7 @@
         "phpoffice/phpspreadsheet": "^1.24",
         "snc/redis-bundle": "^4.2",
         "symfony/asset": "6.1.*",
+        "symfony/cache": "6.1.*",
         "symfony/console": "6.1.*",
         "symfony/dotenv": "6.1.*",
         "symfony/filesystem": "6.1.*",

@@ -12,6 +12,17 @@ class RootController extends AbstractController
     #[Route('/', methods: ['GET', 'HEAD'])]
     public function info(): Response
     {
-        return $this->render('index.html.twig', []);
+        $response = $this->render('index.html.twig', []);
+
+        // set cache publicly
+        $response->setPublic();
+
+        // set cache for 60 seconds = 1 minute
+        $response->setMaxAge(60);
+
+        // set a custom Cache-Control directive
+        $response->headers->addCacheControlDirective('must-revalidate', true);
+
+        return $response;
     }
 }

@@ -42,10 +42,22 @@ class ApiPricingController extends AbstractController
             }
 
             // get all data without filter
-            $datalist = $readertObj->fetch();
+            $result = $readertObj->fetch();
 
-            // return json of result
-            return $this->json($datalist, $status = 200);
+            // create json response obj
+            $response = $this->json($result);
+
+            // set cache publicly
+            $response->setPublic();
+
+            // set cache for 3600 seconds = 1 hour
+            $response->setMaxAge(3600);
+
+            // set a custom Cache-Control directive
+            $response->headers->addCacheControlDirective('must-revalidate', true);
+
+            // return response
+            return $response;
         } catch (\exception $e) {
             // return error 501 and show error message
             return $this->json($e->getMessage(), $status = 501);
