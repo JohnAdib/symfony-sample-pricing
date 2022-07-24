@@ -3,7 +3,7 @@
 namespace App\Lib\Reader;
 
 
-use App\Lib\DataStructure\Filters;
+use App\Lib\DataStructure\Filter;
 
 
 /**
@@ -32,11 +32,10 @@ class Read
     public function __construct()
     {
         // save absolute path of excel
-        $this->ADDR_ABSOLUTE_JSON  = dirname(__DIR__). self::ADDR_FOLDER_PATH. 'tmp-'. self::FILENAME .'.json';
+        $this->ADDR_ABSOLUTE_JSON  = dirname(__DIR__) . self::ADDR_FOLDER_PATH . 'tmp-' . self::FILENAME . '.json';
 
         // check excel file exist
-        if(!file_exists($this->ADDR_ABSOLUTE_JSON))
-        {
+        if (!file_exists($this->ADDR_ABSOLUTE_JSON)) {
             throw new \Exception("JsonFileNotExist");
         }
 
@@ -57,17 +56,15 @@ class Read
         $result = [];
 
         // loop for each row
-        foreach( $serversData as $row => $dataline )
-        {
+        foreach ($serversData as $row => $dataline) {
             // get array values to add inside filter object
             $args = array_values($dataline);
 
             // create new object from filter
-            $filterResult = new Filters(...$args);
+            $filterResult = new Filter(...$args);
 
             // check if this item validated based on filters, add it to output
-            if($filterResult->validate($this->filters))
-            {
+            if ($filterResult->validate($this->filters)) {
                 // save in result
                 $result[] = $filterResult;
             }

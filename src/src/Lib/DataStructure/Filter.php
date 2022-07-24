@@ -1,5 +1,5 @@
 <?php
-// src/Lib/DataStructure/Filters.php
+// src/Lib/DataStructure/Filter.php
 declare(strict_types=1);
 
 namespace App\Lib\DataStructure;
@@ -8,7 +8,7 @@ namespace App\Lib\DataStructure;
 use App\Lib\DataStructure\Server;
 
 
-class Filters extends Server
+class Filter extends Server
 {
     /**
      * extend features of server class to validate values and apply filter
@@ -19,11 +19,9 @@ class Filters extends Server
     public function validate(array $filters): bool
     {
         $valid = true;
-        foreach ($filters as $field => $conditions)
-        {
+        foreach ($filters as $field => $conditions) {
             // todo use match
-            switch ($field)
-            {
+            switch ($field) {
                 case 'storage':
                     $valid = $this->storage($conditions);
                     break;
@@ -40,7 +38,7 @@ class Filters extends Server
                     $valid = $this->location($conditions);
                     break;
 
-                // extra conditions
+                    // extra conditions
                 case 'price':
                     $valid = $this->price($conditions);
                     break;
@@ -55,8 +53,7 @@ class Filters extends Server
             }
 
             // if for current field validation is not validate break the loop
-            if($valid === false)
-            {
+            if ($valid === false) {
                 break;
             }
         }
@@ -73,13 +70,11 @@ class Filters extends Server
      */
     private function storage(array $cond): bool
     {
-        if(isset($cond['min']) && $this->hddTotalCapacity < $cond['min'])
-        {
+        if (isset($cond['min']) && $this->hddTotalCapacity < $cond['min']) {
             return false;
         }
 
-        if(isset($cond['max']) && $this->hddTotalCapacity > $cond['max'])
-        {
+        if (isset($cond['max']) && $this->hddTotalCapacity > $cond['max']) {
             return false;
         }
 
@@ -95,13 +90,11 @@ class Filters extends Server
      */
     private function price(array $cond): bool
     {
-        if(isset($cond['min']) && $this->priceAmount < $cond['min'])
-        {
+        if (isset($cond['min']) && $this->priceAmount < $cond['min']) {
             return false;
         }
 
-        if(isset($cond['max']) && $this->priceAmount > $cond['max'])
-        {
+        if (isset($cond['max']) && $this->priceAmount > $cond['max']) {
             return false;
         }
 
@@ -117,8 +110,7 @@ class Filters extends Server
      */
     private function brand(array $cond): bool
     {
-        if(in_array(mb_strtolower($this->modelBrand), $cond))
-        {
+        if (in_array(mb_strtolower($this->modelBrand), $cond)) {
             return true;
         }
 
@@ -134,8 +126,7 @@ class Filters extends Server
      */
     private function ram(array $cond): bool
     {
-        if(in_array($this->ramCapacity, $cond))
-        {
+        if (in_array($this->ramCapacity, $cond)) {
             return true;
         }
 
@@ -151,8 +142,7 @@ class Filters extends Server
      */
     private function hdd(array $cond): bool
     {
-        if(in_array(mb_strtolower($this->hddType), $cond))
-        {
+        if (in_array(mb_strtolower($this->hddType), $cond)) {
             return true;
         }
 
@@ -168,12 +158,10 @@ class Filters extends Server
      */
     private function location(array $cond): bool
     {
-        if(in_array(mb_strtolower($this->location), $cond))
-        {
+        if (in_array(mb_strtolower($this->location), $cond)) {
             return true;
         }
 
         return false;
     }
-
 }
