@@ -17,8 +17,8 @@ class FromExcel
     private const ADDR_FOLDER_PATH = '/File/';
 
     // path of files
-    private string $ADDR_ABSOLUTE_EXCEL;
-    private string $ADDR_ABSOLUTE_JSON;
+    public readonly string $ADDR_ABSOLUTE_EXCEL;
+    public readonly string $ADDR_ABSOLUTE_JSON;
 
 
     /**
@@ -27,12 +27,11 @@ class FromExcel
     public function __construct()
     {
         // save absolute path of excel
-        $this->ADDR_ABSOLUTE_EXCEL = dirname(__DIR__). self::ADDR_FOLDER_PATH. self::FILENAME .'.xlsx';
-        $this->ADDR_ABSOLUTE_JSON  = dirname(__DIR__). self::ADDR_FOLDER_PATH. 'tmp-'. self::FILENAME .'.json';
+        $this->ADDR_ABSOLUTE_EXCEL = dirname(__DIR__) . self::ADDR_FOLDER_PATH . self::FILENAME . '.xlsx';
+        $this->ADDR_ABSOLUTE_JSON  = dirname(__DIR__) . self::ADDR_FOLDER_PATH . 'tmp-' . self::FILENAME . '.json';
 
         // check excel file exist
-        if(!file_exists($this->ADDR_ABSOLUTE_EXCEL))
-        {
+        if (!file_exists($this->ADDR_ABSOLUTE_EXCEL)) {
             throw new \Exception("ExcelFileNotExist");
         }
 

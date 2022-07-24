@@ -18,7 +18,7 @@ class Read
     private const ADDR_FOLDER_PATH = '/File/';
 
     // path of files
-    private string $ADDR_ABSOLUTE_JSON;
+    public readonly string $ADDR_ABSOLUTE_JSON;
 
     private array $dataset;
 
