@@ -10,7 +10,7 @@ use App\Lib\Import\FromExcel;
 
 class ApiPricingImportController extends AbstractController
 {
-    #[Route('/api/pricing/import')]
+    #[Route('/api/pricing/import', methods: ['GET', 'HEAD'])]
     public function info(): JsonResponse
     {
         try {
