@@ -28,7 +28,7 @@ services:
     extra_hosts:
         - "symfony-sample1.local:127.0.0.1"
     volumes:
-      - nginx_log:/var/log/nginx
+      # - nginx_log:/var/log/nginx
       - ./src/:/var/www/html/
     environment:
       TZ: ${TIMEZONE}
@@ -54,8 +54,6 @@ services:
       SERVICE_TAGS: dev
     networks:
       - qanat
-    depends_on:
-      - redis
 # -------------------------------------------------- redis
   redis:
     container_name: redis
@@ -70,5 +68,7 @@ services:
       TZ: ${TIMEZONE}
     networks:
       - qanat
+    profiles:
+      - dev
 #
 # eol

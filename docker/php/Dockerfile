@@ -75,6 +75,6 @@ COPY src/ /var/www/html/
 
 
 # This makes directory /var/www owned by www-data which is the default user for php-fpm.
-RUN chown -R www-data:www-data /var/www/html
-RUN chmod -R 760 /var/www/html/src/Lib/File
-RUN composer install --prefer-install=dist
+#RUN chown -R www-data:www-data /var/www/html
+#RUN chmod -R 760 /var/www/html/backend/src/Lib/File
+#RUN composer install --prefer-install=dist
