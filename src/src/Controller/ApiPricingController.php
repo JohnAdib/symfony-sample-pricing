@@ -11,9 +11,15 @@ use App\Lib\Reader\Read;
 
 class ApiPricingController extends AbstractController
 {
-    #[Route('/api/pricing', methods: ['GET', 'HEAD'])]
+    #[Route('/api/pricing', methods: ['GET', 'POST', 'HEAD'])]
     public function info(Request $request): JsonResponse
     {
+        // set header for cors
+        header('Access-Control-Allow-Origin:*');
+        header('Access-Control-Allow-Headers:*');
+        header('X-Powered-By:MrAdib');
+
+
         try {
             // read data from excel and save in array of objects
             $readertObj = new Read();
