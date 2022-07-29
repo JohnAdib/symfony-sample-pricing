@@ -35,7 +35,7 @@ class ApiController extends AbstractController
                     '/api/pricing?ram-min=32&ram-max=96',
                     // multiple
                     '/api/pricing?hdd[]=ssd&location=AMS-01&ram-min=32&ram-max=96',
-                    '/api/pricing?hdd[]=ssd&location=AMS-01&ram-min=32&ram-max=96&storage-min=300&storage-max=500',
+                    '/api/pricing?hdd[]=ssd&location=AMS-01&ram-min=32&ram-max=96&storage-min=200&storage-max=300',
                 ],
             ];
 
