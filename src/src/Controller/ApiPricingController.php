@@ -34,7 +34,7 @@ class ApiPricingController extends AbstractController
                     // if value is array, for chedckbox
                     foreach ($value as $condition) {
                         // add array filter
-                        $readertObj->addFilter($key, mb_strtolower($condition));
+                        $readertObj->addFilter($key, $condition);
                     }
                 } else {
                     // lowercase every value
@@ -52,6 +52,8 @@ class ApiPricingController extends AbstractController
 
                     // check value is numberic for range - for range slider
                     if (is_numeric($filteredIntVal)) {
+                        // convert to int
+                        $filteredIntVal = intval($filteredIntVal);
                         // based on min or max on filed, call fn
                         if (substr($key, -3) === 'min') {
                             // for example storage-min
@@ -77,10 +79,10 @@ class ApiPricingController extends AbstractController
             $response = $this->json($result);
 
             // set cache publicly
-            $response->setPublic();
+            // $response->setPublic();
 
             // set cache for 3600 seconds = 1 hour
-            $response->setMaxAge(3600);
+            // $response->setMaxAge(3600);
 
             // set a custom Cache-Control directive
             $response->headers->addCacheControlDirective('must-revalidate', true);

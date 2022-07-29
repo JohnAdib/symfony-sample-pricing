@@ -105,7 +105,7 @@ class Read
      */
     public function addFilter(string $field, string $query): void
     {
-        $this->filters[$field][] = mb_strtolower($query);
+        $this->filters[$field][] = $this->clearFilterVal($query);
     }
 
 
@@ -117,35 +117,52 @@ class Read
      * @param string|integer $query
      * @return void
      */
-    public function onlyFilter(string $field, string|int $query): void
+    public function onlyFilter(string $field, string $query): void
     {
-        $this->filters[$field] = [mb_strtolower($query)];
+        $this->filters[$field] = [$this->clearFilterVal($query)];
     }
 
 
     /**
-     * apply range filter to data,
-     * used for storage or price
+     * apply range min value
      *
-     * @param string $field
-     * @param string|integer|float $min
-     * @param string|integer|float $max
+     * @param  string  $field
+     * @param  integer $min
      * @return void
      */
-    public function onlyFilterRange(string $field, string|int|float $min, string|int|float $max): void
-    {
-        $this->filters[$field] = ['min' => $min, 'max' => $max];
-    }
-
-
     public function onlyFilterRangeMin(string $field, int $min): void
     {
-        $this->filters[$field]['min'] = $min;
+        $this->filters[$field]['min'] = $this->clearFilterVal($min);
     }
 
 
+    /**
+     * apply range max value
+     *
+     * @param  string  $field
+     * @param  integer $max
+     * @return void
+     */
     public function onlyFilterRangeMax(string $field, int $max): void
     {
-        $this->filters[$field]['max'] = $max;
+        $this->filters[$field]['max'] = $this->clearFilterVal($max);
+    }
+
+
+    /**
+     * clear user input value to conver to int or change to lowercase
+     *
+     * @param  string $val
+     * @return mixed
+     */
+    private function clearFilterVal(string $val): mixed
+    {
+        if (is_numeric($val)) {
+            $query = intval($val);
+        } else {
+            $query = mb_strtolower($val);
+        }
+
+        return $query;
     }
 }
