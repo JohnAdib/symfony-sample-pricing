@@ -30,29 +30,40 @@ class ApiPricingController extends AbstractController
             // for each parameter passed through url
             foreach ($allParameters as $key => $value) {
 
-                // chcek value is numberic for range - for range slider
-                if (is_numeric($value)) {
-                    // get 3 last char for min and max
-                    $lastCharMinMax = substr($key, -3);
-                    // convert value to int
-                    $valueNumber = intval($value);
-                    // extract field name
-                    $field = substr($key, 0,  -3);
-                    // based on min or max on filed, call fn
-                    if ($lastCharMinMax === 'min') {
-                        $readertObj->onlyFilterRangeMin($field, $valueNumber);
-                    } else if ($lastCharMinMax === 'max') {
-                        $readertObj->onlyFilterRangeMax($field, $valueNumber);
-                    }
-                } else if (is_array($value)) {
+                if (is_array($value)) {
                     // if value is array, for chedckbox
                     foreach ($value as $condition) {
                         // add array filter
-                        $readertObj->addFilter($key, $condition);
+                        $readertObj->addFilter($key, mb_strtolower($condition));
                     }
                 } else {
-                    // for dropdown or radio
-                    $readertObj->onlyFilter($key, $value);
+                    // lowercase every value
+                    $filteredIntVal = mb_strtolower($value);
+                    // remove GB from value - for ram and storage or everything
+                    if (substr($filteredIntVal, -2) === 'gb') {
+                        $filteredIntVal = substr($filteredIntVal, 0, -2);
+                        $filteredIntVal = intval($filteredIntVal);
+                    }
+                    // if we are TB in value
+                    else if (substr($filteredIntVal, -2) === 'tb') {
+                        $filteredIntVal = substr($filteredIntVal, 0, -2);
+                        $filteredIntVal = intval($filteredIntVal) * 1000;
+                    }
+
+                    // check value is numberic for range - for range slider
+                    if (is_numeric($filteredIntVal)) {
+                        // based on min or max on filed, call fn
+                        if (substr($key, -3) === 'min') {
+                            // for example storage-min
+                            $readertObj->onlyFilterRangeMin(substr($key, 0,  -3), $filteredIntVal);
+                        } else if (substr($key, -3) === 'max') {
+                            // for example storage-max
+                            $readertObj->onlyFilterRangeMax(substr($key, 0,  -3), $filteredIntVal);
+                        }
+                    } else {
+                        // for dropdown or radio
+                        $readertObj->onlyFilter($key, $value);
+                    }
                 }
             }
 
