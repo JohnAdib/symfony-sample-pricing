@@ -15,11 +15,12 @@ class ApiController extends AbstractController
         // create sample info json
         $result =
             [
-                'version'  => "1.0.0",
-                'date'     => date('Y/m/d H:i:s'),
-                'author'   => "Javad Adib",
-                'url'      => 'https://github.com/MrJavadAdib/symfony-sample-pricing',
-                'examples' =>
+                'version'     => "1.0.0",
+                'date'        => date('Y/m/d H:i:s'),
+                'author'      => "Javad Adib",
+                'url'         => 'https://github.com/MrJavadAdib/symfony-sample-pricing',
+                'importExcel' => '/api/pricing/import',
+                'examples'    =>
                 [
                     '/api/pricing',
                     // select or radio
