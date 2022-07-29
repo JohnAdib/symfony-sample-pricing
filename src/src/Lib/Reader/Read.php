@@ -103,7 +103,7 @@ class Read
      * @param string|integer $query
      * @return void
      */
-    public function addFilter(string $field, string|int $query): void
+    public function addFilter(string $field, string $query): void
     {
         $this->filters[$field][] = mb_strtolower($query);
     }
@@ -135,5 +135,17 @@ class Read
     public function onlyFilterRange(string $field, string|int|float $min, string|int|float $max): void
     {
         $this->filters[$field] = ['min' => $min, 'max' => $max];
+    }
+
+
+    public function onlyFilterRangeMin(string $field, int $min): void
+    {
+        $this->filters[$field]['min'] = $min;
+    }
+
+
+    public function onlyFilterRangeMax(string $field, int $max): void
+    {
+        $this->filters[$field]['max'] = $max;
     }
 }

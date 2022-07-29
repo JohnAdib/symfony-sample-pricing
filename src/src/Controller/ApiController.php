@@ -21,25 +21,21 @@ class ApiController extends AbstractController
                 'url'      => 'https://github.com/MrJavadAdib/symfony-sample-pricing',
                 'examples' =>
                 [
-                    'pricing-all' => '/api/pricing',
-                    // one filter
-                    'pricing-hdd' => '/api/pricing?hdd=ssd',
-                    'pricing-brand' => '/api/pricing?brand=HP',
-                    'pricing-ram' => '/api/pricing?ram=8',
-                    'pricing-location' => '/api/pricing?location=AMS-01',
-                    // one filter - multiple
-                    'pricing-ram[multiple]' => '/api/pricing?ram=8|32|64',
-                    'pricing-hdd[multiple]' => '/api/pricing?hdd=ssd|sas',
-                    // one filter - range
-                    'pricing-storge[range]' => '/api/pricing?storage=960-1500',
-                    'pricing-price[range]' => '/api/pricing?price=100-900',
+                    '/api/pricing',
+                    // select or radio
+                    '/api/pricing?location=AMS-01',
+                    '/api/pricing?brand=Huawei',
+                    '/api/pricing?hdd=sas',
+                    '/api/pricing?ram=8',
+                    // checkbox
+                    '/api/pricing?hdd[]=ssd&hdd[]=sas',
+                    '/api/pricing?ram[]=48&ram[]=64&ram[]=96',
+                    // range
+                    '/api/pricing?storage-min=300&storage-max=500',
+                    '/api/pricing?ram-min=32&ram-max=96',
                     // multiple
-                    'pricing-hdd-storage[range]' => '/api/pricing?hdd=ssd&storage=300-500',
-                    'pricing-hdd[multiple]-storage[range]' => '/api/pricing?hdd=ssd|sas&storage=300-1000',
-                    // all
-                    'pricing-hdd[multiple]-storage[range]-location-ram' => '/api/pricing?hdd=ssd|sas&storage=400-1000&AMS-01&ram=64',
-                    'pricing-hdd[multiple]-storage[range]-location-ram-brand[multiple]-price[range]' => '/api/pricing?hdd=ssd|sas&storage=400-1600&AMS-01&ram=96&brand=hp|dell&price=100-600',
-
+                    '/api/pricing?hdd[]=sas&location=AMS-01&ram-min=32&ram-max=96',
+                    '/api/pricing?hdd[]=sas&location=AMS-01&ram-min=32&ram-max=96&storage-min=300&storage-max=500',
                 ],
             ];
 

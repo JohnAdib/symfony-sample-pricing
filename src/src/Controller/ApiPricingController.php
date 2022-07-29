@@ -27,25 +27,32 @@ class ApiPricingController extends AbstractController
             // get all parameters to use as filter
             $allParameters = $request->query->all();
 
-            // loop on all parameters
+            // for each parameter passed through url
             foreach ($allParameters as $key => $value) {
-                // it's range so use range filter for example for ?storage=100-200
-                $range = explode("-", $value);
-                if (is_array($range) && count($range) === 2 && is_numeric($range[0]) && is_numeric($range[1])) {
-                    // add range filer
-                    $readertObj->onlyFilterRange($key, $range[0], $range[1]);
-                } else {
-                    // check for array inside parameter for example for ?hdd=SSD|SAS|SATA2
-                    $multipleItem = explode("|", $value);
-                    if (is_array($multipleItem) && count($multipleItem) >= 2 && count($multipleItem) <= 10) {
-                        foreach ($multipleItem as $index => $condition) {
-                            // add array filter
-                            $readertObj->addFilter($key, $condition);
-                        }
-                    } else {
-                        // it's a simple filter and reset
-                        $readertObj->onlyFilter($key, $value);
+
+                // chcek value is numberic for range - for range slider
+                if (is_numeric($value)) {
+                    // get 3 last char for min and max
+                    $lastCharMinMax = substr($key, -3);
+                    // convert value to int
+                    $valueNumber = intval($value);
+                    // extract field name
+                    $field = substr($key, 0,  -3);
+                    // based on min or max on filed, call fn
+                    if ($lastCharMinMax === 'min') {
+                        $readertObj->onlyFilterRangeMin($field, $valueNumber);
+                    } else if ($lastCharMinMax === 'max') {
+                        $readertObj->onlyFilterRangeMax($field, $valueNumber);
                     }
+                } else if (is_array($value)) {
+                    // if value is array, for chedckbox
+                    foreach ($value as $condition) {
+                        // add array filter
+                        $readertObj->addFilter($key, $condition);
+                    }
+                } else {
+                    // for dropdown or radio
+                    $readertObj->onlyFilter($key, $value);
                 }
             }
 

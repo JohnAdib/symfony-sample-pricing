@@ -17,7 +17,7 @@ This is a simple program that uses an Excel file as a data source and presents t
 - [ ] User interface
 - [ ] Optimization - load times and rendering performance
   - [x] Convert excel file to JSON
-  - [ ] Use Redis or Memcached
+  - [ ] Save data inside database
   - [x] Set HTTP Cache
 
 If something is unclear regarding the scope of the assignment, you can make reasonable assumptions.
@@ -111,25 +111,3 @@ Open IP address or point some URL to server. For temporary usage below domain is
 
 - <https://symfony1.mradib.com/>
 - <https://symfony1.mradib.com/api>
-
-Example of API with One Filters
-
-- <https://symfony1.mradib.com/api/pricing>
-- <https://symfony1.mradib.com/api/pricing?hdd=ssd>
-- <https://symfony1.mradib.com/api/pricing?brand=hp>
-- <https://symfony1.mradib.com/api/pricing?ram=8>
-- <https://symfony1.mradib.com/api/pricing?location=AMS-01>
-- <https://symfony1.mradib.com/api/pricing?ram=8|32|64>
-- <https://symfony1.mradib.com/api/pricing?hdd=ssd|sas>
-- <https://symfony1.mradib.com/api/pricing?storage=960-1500>
-- <https://symfony1.mradib.com/api/pricing?price=100-800>
-
-Example of API with Multiple Filters
-
-- <https://symfony1.mradib.com/api/pricing?hdd=ssd&storage=300-500>
-- <https://symfony1.mradib.com/api/pricing?hdd=ssd|sas&storage=300-1000>
-
-Example of API - Complex scenarios
-
-- <https://symfony1.mradib.com/api/pricing?hdd=ssd|sas&storage=400-1000&AMS-01&ram=64>
-- <https://symfony1.mradib.com/api/pricing?hdd=ssd|sas&storage=400-1600&AMS-01&ram=96&brand=hp|dell&price=100-600>
