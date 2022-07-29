@@ -130,7 +130,7 @@ class Read
      * @param  integer $min
      * @return void
      */
-    public function onlyFilterRangeMin(string $field, int $min): void
+    public function onlyFilterRangeMin(string $field, string $min): void
     {
         $this->filters[$field]['min'] = $this->clearFilterVal($min);
     }
@@ -143,7 +143,7 @@ class Read
      * @param  integer $max
      * @return void
      */
-    public function onlyFilterRangeMax(string $field, int $max): void
+    public function onlyFilterRangeMax(string $field, string $max): void
     {
         $this->filters[$field]['max'] = $this->clearFilterVal($max);
     }
