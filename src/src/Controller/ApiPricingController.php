@@ -55,10 +55,13 @@ class ApiPricingController extends AbstractController
                         // based on min or max on filed, call fn
                         if (substr($key, -3) === 'min') {
                             // for example storage-min
-                            $readertObj->onlyFilterRangeMin(substr($key, 0,  -3), $filteredIntVal);
+                            $readertObj->onlyFilterRangeMin(substr($key, 0, -4), $filteredIntVal);
                         } else if (substr($key, -3) === 'max') {
                             // for example storage-max
-                            $readertObj->onlyFilterRangeMax(substr($key, 0,  -3), $filteredIntVal);
+                            $readertObj->onlyFilterRangeMax(substr($key, 0, -4), $filteredIntVal);
+                        } else {
+                            // for dropdown or radio with numeric value
+                            $readertObj->onlyFilter($key, $filteredIntVal);
                         }
                     } else {
                         // for dropdown or radio

@@ -26,7 +26,7 @@ class ApiController extends AbstractController
                     '/api/pricing?location=SIN-11',
                     '/api/pricing?brand=Huawei',
                     '/api/pricing?hdd=sas',
-                    '/api/pricing?ram=8gb',
+                    '/api/pricing?ram=96gb',
                     // checkbox
                     '/api/pricing?hdd[]=ssd&hdd[]=sas',
                     '/api/pricing?ram[]=4&ram[]=8&ram[]=96',

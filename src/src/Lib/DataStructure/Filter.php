@@ -126,12 +126,25 @@ class Filter extends Server
      */
     private function ram(array $cond): bool
     {
-        if (in_array($this->ramCapacity, $cond)) {
-            return true;
+        if (isset($cond['min']) && $this->ramCapacity < $cond['min']) {
+            return false;
         }
 
-        return false;
+        if (isset($cond['max']) && $this->ramCapacity > $cond['max']) {
+            return false;
+        }
+
+        if (is_array($cond) && isset($cond[0])) {
+            if (in_array($this->ramCapacity, $cond)) {
+                return true;
+            }
+
+            return false;
+        }
+
+        return true;
     }
+
 
 
     /**
