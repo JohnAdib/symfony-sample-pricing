@@ -37,36 +37,16 @@ class ApiPricingController extends AbstractController
                         $readertObj->addFilter($key, $condition);
                     }
                 } else {
-                    // lowercase every value
-                    $filteredIntVal = mb_strtolower($value);
-                    // remove GB from value - for ram and storage or everything
-                    if (substr($filteredIntVal, -2) === 'gb') {
-                        $filteredIntVal = substr($filteredIntVal, 0, -2);
-                        $filteredIntVal = intval($filteredIntVal);
-                    }
-                    // if we are TB in value
-                    else if (substr($filteredIntVal, -2) === 'tb') {
-                        $filteredIntVal = substr($filteredIntVal, 0, -2);
-                        $filteredIntVal = intval($filteredIntVal) * 1000;
-                    }
-
                     // check value is numberic for range - for range slider
-                    if (is_numeric($filteredIntVal)) {
-                        // convert to int
-                        $filteredIntVal = intval($filteredIntVal);
-                        // based on min or max on filed, call fn
-                        if (substr($key, -3) === 'min') {
-                            // for example storage-min
-                            $readertObj->onlyFilterRangeMin(substr($key, 0, -4), $filteredIntVal);
-                        } else if (substr($key, -3) === 'max') {
-                            // for example storage-max
-                            $readertObj->onlyFilterRangeMax(substr($key, 0, -4), $filteredIntVal);
-                        } else {
-                            // for dropdown or radio with numeric value
-                            $readertObj->onlyFilter($key, $filteredIntVal);
-                        }
+                    // based on min or max on filed, call fn
+                    if (substr($key, -3) === 'min') {
+                        // for example storage-min
+                        $readertObj->onlyFilterRangeMin(substr($key, 0, -4), $value);
+                    } else if (substr($key, -3) === 'max') {
+                        // for example storage-max
+                        $readertObj->onlyFilterRangeMax(substr($key, 0, -4), $value);
                     } else {
-                        // for dropdown or radio
+                        // for dropdown or radio with numeric value
                         $readertObj->onlyFilter($key, $value);
                     }
                 }

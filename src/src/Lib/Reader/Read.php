@@ -161,7 +161,19 @@ class Read
             $query = intval($val);
         } else {
             $query = mb_strtolower($val);
+
+            // remove GB from value - for ram and storage or everything
+            if (substr($query, -2) === 'gb') {
+                $query = substr($query, 0, -2);
+                $query = intval($query);
+            }
+            // if we are TB in value
+            else if (substr($query, -2) === 'tb') {
+                $query = substr($query, 0, -2);
+                $query = intval($query) * 1000;
+            }
         }
+
 
         return $query;
     }
