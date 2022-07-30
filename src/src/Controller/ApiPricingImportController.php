@@ -68,8 +68,8 @@ class ApiPricingImportController extends AbstractController
 
             // ram
             $ramTxt          = $datarowObj?->{'1'};
-            $args['ram']      = intval(strtok($ramTxt, 'G'));
-            $args['ramtype'] = strtok($ramTxt, 'B');
+            $args['ram']     = intval(strtok($ramTxt, 'G'));
+            $args['ramtype'] = substr($ramTxt, strlen($args['ram']) + 2);
 
             // storage
             $hddTxt = $datarowObj?->{'2'};
