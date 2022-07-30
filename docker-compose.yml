@@ -73,6 +73,8 @@ services:
       SERVICE_NAME: mysql
       TZ: ${TIMEZONE}
     # env_file: mysql.env
+    ports:
+      - 3306:3306
     volumes:
       # - mysql_data:/var/usr/mysql
       - mysql_lib:/var/lib/mysql
