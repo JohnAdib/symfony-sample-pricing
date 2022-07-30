@@ -5,6 +5,8 @@ version: "3.8"
 volumes:
   # ********** nginx
   nginx_log:
+  # ********** mysql
+  mysql_lib:
   # ********** redis
   redis_data:
   # ********** postgresql
@@ -56,23 +58,49 @@ services:
       SERVICE_TAGS: dev
     networks:
       - qanat
-# -------------------------------------------------- redis
-  redis:
-    container_name: redis
-    image: redis:latest
+# -------------------------------------------------- mysql - db
+  mysql:
+    container_name: mysql
+    image: mysql
     restart: always
-    # ports:
-      # - 6379:6379
-    command: ["redis-server", "--appendonly", "yes"]
-    volumes:
-      - redis_data:/data
+    tty: true
     environment:
+      MYSQL_ROOT_PASSWORD: ${MYSQL_ROOT_PASSWORD}
+      # MYSQL_DATABASE: ${MYSQL_DATABASE}
+      # MYSQL_USER: ${MYSQL_USER}
+      # MYSQL_PASSWORD: ${MYSQL_PASSWORD}
+      SERVICE_TAGS: dev
+      SERVICE_NAME: mysql
       TZ: ${TIMEZONE}
+    # env_file: mysql.env
+    volumes:
+      # - mysql_data:/var/usr/mysql
+      - mysql_lib:/var/lib/mysql
+      # - ./services/mysql/production/my.cnf:/etc/mysql/my.cnf
     networks:
       - qanat
-    profiles:
-      - dev
-  # -------------------------------------------------- postgresql
+# -------------------------------------------------- phpmyadmin
+  phpmyadmin:
+    container_name: phpmyadmin
+    image: phpmyadmin
+    restart: on-failure
+    # entrypoint: ["echo", "Service phpmyadmin disabled"]
+    ports:
+      - 8094:80
+    networks:
+      - qanat
+    depends_on:
+      - nginx
+      - php
+      - mysql
+    profiles: ["dev", "phpmyadmin"]
+    environment:
+      PMA_HOST: mysql
+      MYSQL_ROOT_PASSWORD: ${MYSQL_ROOT_PASSWORD}
+      PMA_USER: root
+      PMA_PASSWORD: ${MYSQL_ROOT_PASSWORD}
+      PMA_ARBITRARY: 1
+# -------------------------------------------------- postgresql
   database:
     image: postgres:${POSTGRES_VERSION:-13}-alpine
     restart: always
@@ -90,5 +118,21 @@ services:
       - "1254"
     networks:
       - qanat
+    profiles: ["postgres"]
+# -------------------------------------------------- adminer
+  adminer:
+    container_name: adminer
+    image: adminer
+    restart: on-failure
+    # entrypoint: ["echo", "Service adminer disabled"]
+    ports:
+      - 8092:8080
+    networks:
+      - qanat
+    depends_on:
+      - nginx
+      - php
+      - database
+    profiles: ["postgres"]
 #
 # eol
