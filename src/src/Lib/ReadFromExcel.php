@@ -16,7 +16,7 @@ class ReadFromExcel
     /**
      * set absolute path of excel file
      */
-    public function __construct(string $remote, string $tmpFile)
+    public function __construct(string $remote)
     {
         // check excel file exist
         if (!file_exists($remote)) {

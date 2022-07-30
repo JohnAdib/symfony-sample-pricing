@@ -6,7 +6,7 @@ use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpKernel\KernelInterface;
-use App\Lib\Import\FromExcel;
+use Doctrine\Persistence\ManagerRegistry;
 use App\Lib\ReadFromExcel;
 
 
@@ -17,20 +17,22 @@ class ApiPricingImportController extends AbstractController
     {
         try {
             // get files url on remote and locatl
-            $url_excel_remote = $_ENV['EXCEL_URL'];
+            // $url_excel_remote = $_ENV['EXCEL_URL'];
+
+            // because that url is not exist, use local file
             $url_excel_remote = $kernel->getProjectDir() . $_ENV['EXCEL_URL_LOCAL'];
-            $url_temp         = $kernel->getProjectDir() . $_ENV['EXCEL_ADDR_TEMP'];
-
-            var_dump($url_excel_remote);
-            var_dump($url_temp);
-
 
             // read data from excel
-            $excelReaderObj = new ReadFromExcel($url_excel_remote, $url_temp);
+            $excelReaderObj = new ReadFromExcel($url_excel_remote);
+
             // read excel data
             $excelData = $excelReaderObj->fetch('Sheet2');
 
             // pass excel data to model to inset into db
+            $model = new \App\Model\PricingModel();
+
+            // call insert fn on model
+            $model->insertDataIntoDb($excelData);
 
             // return json of result
             // return status 201 means created
