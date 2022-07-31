@@ -43,7 +43,7 @@ class PricingRepository extends ServiceEntityRepository
     /**
      * @return Pricing[]
      */
-    public function advanceSearch(array $filters): array
+    public function advanceSearch(array $filters, bool $needArrayOfArrays = true): array
     {
         $entityManager = $this->getEntityManager();
         // create query builder on pricing table
@@ -155,8 +155,16 @@ class PricingRepository extends ServiceEntityRepository
 
         $qb->setMaxResults(1000);
 
-        // get result of query
-        return $qb->getQuery()->getResult();
+        // save myQuery obj
+        $myQuery = $qb->getQuery();
+        // returan array of array
+        if ($needArrayOfArrays) {
+            // get result of query
+            return $myQuery->getResult(\Doctrine\ORM\Query::HYDRATE_ARRAY);
+        }
+
+        // return array of objects
+        return $myQuery->getResult();
     }
 
 

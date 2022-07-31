@@ -26,9 +26,6 @@ class ApiPricingController extends AbstractController
         // call advance search
         $result = $doctrine->getManager()->getRepository(Pricing::class)->advanceSearch($allParameters);
 
-        var_dump($result);
-        exit();
-
         // create json response obj
         $response = $this->json($result);
 
