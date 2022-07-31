@@ -97,6 +97,10 @@ Go to cloned folder
 
 ```cd symfony-sample-pricing```
 
+If you wanna update submodule you can run below command
+
+```git submodule update --init --recursive```
+
 try to run docker. it takes some minute to do everything. > 7 min for first run
 
 ```docker compose up --build```
