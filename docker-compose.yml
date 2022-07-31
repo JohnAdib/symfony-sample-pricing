@@ -95,7 +95,7 @@ services:
       - nginx
       - php
       - mysql
-    profiles: ["dev", "phpmyadmin"]
+    profiles: ["phpmyadmin"]
     environment:
       PMA_HOST: mysql
       MYSQL_ROOT_PASSWORD: ${MYSQL_ROOT_PASSWORD}

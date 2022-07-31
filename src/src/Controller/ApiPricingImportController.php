@@ -17,6 +17,9 @@ class ApiPricingImportController extends AbstractController
     public function info(KernelInterface $kernel, ManagerRegistry $doctrine): JsonResponse
     {
         try {
+            // @todo remove old records from database
+            // because before each call of import we need empty table
+
             // get files url on remote and locatl
             // $url_excel_remote = $_ENV['EXCEL_URL'];
 
@@ -136,8 +139,18 @@ class ApiPricingImportController extends AbstractController
 
             if (count($args) === 11) {
                 foreach ($args as $key => $value) {
-                    $methodName = 'set' . ucfirst($key);
+                    if (!$value) {
+                        throw new \Exception("ExcelData-NotExist - row " . $row . ' - ' . $key);
+                    }
 
+                    // @todo must check unique record and insert once
+                    // in sample data we have 14 duplicate record
+                    // i think it's good idea to add new field to save md5 of all fileds
+                    // then check it before insert new record
+
+                    // create name of method
+                    $methodName = 'set' . ucfirst($key);
+                    // call setSomefield fn with value
                     $pricing->{$methodName}($value);
                 }
             } else {
