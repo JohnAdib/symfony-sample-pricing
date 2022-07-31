@@ -112,7 +112,44 @@ class PricingRepository extends ServiceEntityRepository
         }
 
         // set sort mode - price acs by default
-        $qb->orderBy('p.price', 'ASC');
+        $orderby = 'asc';
+        if (isset($filters['orderby'])) {
+            $orderby = $filters['orderby'];
+        }
+
+        // set order of result
+        switch ($filters['orderby']) {
+            case 'asc':
+            case 'price-asc':
+                $qb->orderBy('p.price', 'ASC');
+                break;
+
+            case 'desc':
+            case 'price-desc':
+                $qb->orderBy('p.price', 'DESC');
+                break;
+
+            case 'ram-asc':
+                $qb->orderBy('p.ram', 'ASC');
+                break;
+
+            case 'ram-desc':
+                $qb->orderBy('p.ram', 'DESC');
+                break;
+
+            case 'storage-asc':
+                $qb->orderBy('p.storage', 'ASC');
+                break;
+
+            case 'storage-desc':
+                $qb->orderBy('p.storage', 'DESC');
+                break;
+
+            default:
+                $qb->orderBy('p.price', 'ASC');
+                break;
+        }
+
 
         // // debug
         // $myQuery = $qb->getQuery();
