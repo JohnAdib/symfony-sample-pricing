@@ -7,6 +7,7 @@ use Symfony\Component\Filesystem\Filesystem;
 
 /**
  * Try load data from Json
+ * @todo add interface for reader and implement from it
  */
 class ReadFromExcel
 {

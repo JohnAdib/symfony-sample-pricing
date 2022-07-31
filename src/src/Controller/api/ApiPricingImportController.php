@@ -1,6 +1,6 @@
 <?php
-// src/Controller/ApiPricingImportController.php
-namespace App\Controller;
+// src/Controller/api/ApiPricingImportController.php
+namespace App\Controller\api;
 
 use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\HttpFoundation\JsonResponse;
