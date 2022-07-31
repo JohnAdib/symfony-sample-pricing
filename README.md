@@ -111,11 +111,15 @@ Try to run docker. it takes some minute to do everything. `-d` for detached mode
 
 If you have problem with composer, you must find *CONTAINER ID* with `docker ps` command. Then run `docker exec -it 123 sh`. Then you are inside container, go to backend folder with `cd backend`, so run `composer install`. now installation is done.
 
-Also you need to run symfony migrate command to install database for the first time with below command
+Also you need to run symfony migrate command to create database for the first time with below commands
+
+```php bin/console doctrine:database:create```
+
+Then run migrate
 
 ```php bin/console doctrine:migrations:migrate```
 
-Open IP address or point some URL to server. For temporary usage below domain is connected.
+Finally, open IP address or point some URL to server. For temporary usage below domain is connected.
 
 - <https://symfony1.mradib.com/>
 - <https://symfony1.mradib.com/api>
