@@ -2,7 +2,7 @@
 FROM nginx:alpine
 
 # install nano to read and edit something on dev
-RUN apk add nano
+# RUN apk add nano
 
 # install nginx extras
 #RUN apt-get update && apt-get install -y nginx-extras

@@ -3,11 +3,11 @@ FROM php:8.1.8-fpm
 # update package list
 RUN apt update
 # usefull tools
-RUN apt install -y apt-utils nano htop git ncdu zip unzip libzip-dev libmcrypt-dev
+RUN apt install -y apt-utils zip unzip libzip-dev libmcrypt-dev
 # gd
-RUN apt install -y libfreetype6-dev libjpeg62-turbo-dev libpng-dev
-RUN docker-php-ext-configure gd --with-freetype --with-jpeg
-RUN docker-php-ext-install -j$(nproc) gd
+# RUN apt install -y libfreetype6-dev libjpeg62-turbo-dev libpng-dev
+# RUN docker-php-ext-configure gd --with-freetype --with-jpeg
+# RUN docker-php-ext-install -j$(nproc) gd
 # mbstring
 RUN apt install -y libonig5 libonig-dev
 RUN docker-php-ext-install mbstring
@@ -15,21 +15,21 @@ RUN docker-php-ext-install mbstring
 RUN apt install -y libicu-dev
 RUN docker-php-ext-install intl
 # bz2
-RUN apt install -y libbz2-dev pv
-RUN docker-php-ext-install bz2
+# RUN apt install -y libbz2-dev pv
+# RUN docker-php-ext-install bz2
 # soap
-RUN apt install -y libxml2-dev
-RUN docker-php-ext-install soap
+# RUN apt install -y libxml2-dev
+# RUN docker-php-ext-install soap
 # redis
-RUN pecl install -o -f redis
-RUN rm -rf /tmp/pear
-RUN docker-php-ext-enable redis
+# RUN pecl install -o -f redis
+# RUN rm -rf /tmp/pear
+# RUN docker-php-ext-enable redis
 # general extensions
 RUN docker-php-ext-install pdo pdo_mysql mysqli zip gettext
 # imagick
-RUN apt install -y libmagickwand-dev --no-install-recommends
-RUN echo '' | pecl install imagick
-RUN docker-php-ext-enable imagick
+# RUN apt install -y libmagickwand-dev --no-install-recommends
+# RUN echo '' | pecl install imagick
+# RUN docker-php-ext-enable imagick
 
 # Install symfony cli
 RUN curl -1sLf 'https://dl.cloudsmith.io/public/symfony/stable/setup.deb.sh' | bash

@@ -30,7 +30,7 @@ services:
       - "443:443"
     tty: true
     extra_hosts:
-        - "symfony-pricing-sample1.local:127.0.0.1"
+        - "symfony-pricing-sample1.local:host-gateway"
     volumes:
       # - nginx_log:/var/log/nginx
       - ./src/:/var/www/html/
