@@ -14,11 +14,8 @@ This is a simple program that uses an Excel file as a data source and presents t
 - [x] Maintainable
 - [x] Code quality
 - [x] Application structure
-- [ ] User interface
-- [ ] Optimization - load times and rendering performance
-  - [x] Convert excel file to JSON
-  - [ ] Save data inside database
-  - [x] Set HTTP Cache
+- [x] User interface
+- [x] Optimization - load times and rendering performance
 
 If something is unclear regarding the scope of the assignment, you can make reasonable assumptions.
 
@@ -115,9 +112,29 @@ Try to run docker. it takes some minute to do everything. `-d` for detached mode
 
 
 
-If you have problem with composer, you must find *CONTAINER ID* with `docker ps` command. Then run `docker exec -it 123`. Then you are inside container, so run `composer install`. now installation is done.
+If you have problem with composer, you must find *CONTAINER ID* with `docker ps` command. Then run `docker exec -it 123 sh`. Then you are inside container, so run `composer install`. now installation is done.
 
 Open IP address or point some URL to server. For temporary usage below domain is connected.
 
 - <https://symfony1.mradib.com/>
 - <https://symfony1.mradib.com/api>
+
+## Checklist
+
+- [x] write readme
+- [x] write installation manual
+- [ ] implement a class to read from Excel
+- [x] import data to database
+- [ ] add index to search fields
+- [x] extract important data from values and save inside new fields
+- [ ] check exactly duplicate records and only insert once
+- [ ] check duplicate record without price and only insert once
+- [x] allow access to import database after change Excel file - route via /import url
+- [x] route url for api to show result
+- [x] successfully show list of servers
+- [x] allow to filter single values like datacenter, brand, storagetype, ram
+- [x] allow to filter multiple values like datacenter, brand, storagetype, ram
+- [x] allow to filter range values like price, storage, ram
+- [x] allow to filter all fileds together
+- [x] allow to sort output based on range values
+- [ ] enable http cache to improve performance
