@@ -61,14 +61,20 @@ class PricingRepository extends ServiceEntityRepository
         }
 
         // add filter - storage-min
-        if (isset($filters['storage-min']) && is_numeric($filters['storage-min'])) {
-            // @todo change storage text to int
-            $qb->andWhere('p.storage > :storagemin')->setParameter('storagemin', $filters['storage-min']);
+        if (isset($filters['storage-min'])) {
+            $storageMin = $filters['storage-min'];
+            $storageMin = $this->convertValToGb($storageMin);
+            if (is_numeric($storageMin)) {
+                $qb->andWhere('p.storage > :storagemin')->setParameter('storagemin', $storageMin);
+            }
         }
         // add filter - storage-max
-        if (isset($filters['storage-max']) && is_numeric($filters['storage-max'])) {
-            // @todo change storage text to int
-            $qb->andWhere('p.storage < :storagemax')->setParameter('storagemax', $filters['storage-max']);
+        if (isset($filters['storage-max'])) {
+            $storageMax = $filters['storage-max'];
+            $storageMax = $this->convertValToGb($storageMax);
+            if (is_numeric($storageMax)) {
+                $qb->andWhere('p.storage < :storagemax')->setParameter('storagemax', $storageMax);
+            }
         }
 
         // add filter - ram
@@ -234,4 +240,32 @@ class PricingRepository extends ServiceEntityRepository
     //            ->getOneOrNullResult()
     //        ;
     //    }
+
+    /**
+     * clear user input value to conver to int or change to lowercase
+     *
+     * @param  string $val
+     * @return mixed
+     */
+    private function convertValToGb(string $val): mixed
+    {
+        if (is_numeric($val)) {
+            $queryStr = intval($val);
+        } else {
+            $queryStr = mb_strtolower($val);
+
+            // remove GB from value - for ram and storage or everything
+            if (substr($queryStr, -2) === 'gb') {
+                $queryStr = substr($queryStr, 0, -2);
+                $queryStr = intval($queryStr);
+            }
+            // if we are TB in value
+            else if (substr($queryStr, -2) === 'tb') {
+                $queryStr = substr($queryStr, 0, -2);
+                $queryStr = intval($queryStr) * 1000;
+            }
+        }
+
+        return $queryStr;
+    }
 }
