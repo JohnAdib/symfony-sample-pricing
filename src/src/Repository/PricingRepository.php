@@ -52,27 +52,27 @@ class PricingRepository extends ServiceEntityRepository
         // add filter - price-min
         if (isset($filters['price-min']) && is_numeric($filters['price-min'])) {
             // @todo change price text to int
-            $qb->andWhere('p.price > :pricemin')->setParameter('pricemin', $filters['price-min']);
+            $qb->andWhere('p.price > :pricemin')->setParameter('pricemin', $this->convertAndFilterStringToInt($filters['price-min']));
         }
         // add filter - price-max
         if (isset($filters['price-max']) && is_numeric($filters['price-max']) && $filters['price-max'] > 0) {
             // @todo change price text to int
-            $qb->andWhere('p.price < :pricemax')->setParameter('pricemax', $filters['price-max']);
+            $qb->andWhere('p.price < :pricemax')->setParameter('pricemax', $this->convertAndFilterStringToInt($filters['price-max']));
         }
 
         // add filter - storage-min
         if (isset($filters['storage-min'])) {
             $storageMin = $filters['storage-min'];
-            $storageMin = $this->convertValToGb($storageMin);
-            if (is_numeric($storageMin)) {
+            $storageMin = $this->convertAndFilterStringToInt($storageMin);
+            if (is_numeric($storageMin) && $storageMin) {
                 $qb->andWhere('p.storage > :storagemin')->setParameter('storagemin', $storageMin);
             }
         }
         // add filter - storage-max
         if (isset($filters['storage-max'])) {
             $storageMax = $filters['storage-max'];
-            $storageMax = $this->convertValToGb($storageMax);
-            if (is_numeric($storageMax) && $storageMax > 0) {
+            $storageMax = $this->convertAndFilterStringToInt($storageMax);
+            if (is_numeric($storageMax) && $storageMax) {
                 $qb->andWhere('p.storage < :storagemax')->setParameter('storagemax', $storageMax);
             }
         }
@@ -85,31 +85,31 @@ class PricingRepository extends ServiceEntityRepository
                 // array mode
                 // get list of ram and filter them to remove null and empty values
                 $rams = array_filter($filters['ram']);
-                $rams = array_map(array($this, 'convertValToGb'), $rams);
+                $rams = array_map(array($this, 'convertAndFilterStringToInt'), $rams);
                 if (count($rams) >= 1) {
                     $qb->andWhere('p.ram IN ( :rams )');
                     $qb->setParameter('rams', $rams);
                 }
-            } else {
+            } else if ($filters['ram']) {
                 // single mode
-                $qb->andWhere('p.ram = :ram')->setParameter('ram', $this->convertValToGb($filters['ram']));
+                $qb->andWhere('p.ram = :ram')->setParameter('ram', $this->convertAndFilterStringToInt($filters['ram']));
             }
         } else {
             // range mode
 
             // add filter - ram-min
-            if (isset($filters['ram-min'])) {
+            if (isset($filters['ram-min']) && $filters['ram-min']) {
                 $ramMin = $filters['ram-min'];
-                $ramMin = $this->convertValToGb($ramMin);
+                $ramMin = $this->convertAndFilterStringToInt($ramMin);
                 if (is_numeric($ramMin)) {
                     $qb->andWhere('p.ram > :rammin')->setParameter('rammin', $ramMin);
                 }
             }
 
             // add filter - ram-max
-            if (isset($filters['ram-max'])) {
+            if (isset($filters['ram-max']) && $filters['ram-max']) {
                 $ramMax = $filters['ram-max'];
-                $ramMax = $this->convertValToGb($ramMax);
+                $ramMax = $this->convertAndFilterStringToInt($ramMax);
                 if (is_numeric($ramMax) && $ramMax > 0) {
                     $qb->andWhere('p.ram < :rammax')->setParameter('rammax', $ramMax);
                 }
@@ -128,7 +128,7 @@ class PricingRepository extends ServiceEntityRepository
                     $qb->setParameter('storagetypes', $storageTypes);
                     // $qb->setParameter('storagetypes', $storageTypes, \Doctrine\DBAL\Connection::PARAM_STR_ARRAY);
                 }
-            } else {
+            } else if ($filters['storagetype']) {
                 // single mode
                 $qb->andWhere('p.storagetype = :storagetype')->setParameter('storagetype', $filters['storagetype']);
             }
@@ -145,7 +145,7 @@ class PricingRepository extends ServiceEntityRepository
                     $qb->andWhere('p.location IN ( :locations )');
                     $qb->setParameter('locations', $locations);
                 }
-            } else {
+            } else if ($filters['location']) {
                 // single mode
                 $qb->andWhere('p.location = :location')->setParameter('location', $filters['location']);
             }
@@ -153,7 +153,7 @@ class PricingRepository extends ServiceEntityRepository
 
 
         // add filter - brand
-        if (isset($filters['brand']) && $filters['brand']) {
+        if (isset($filters['brand'])) {
             if (is_array($filters['brand'])) {
                 // array mode
                 // get list of brand and filter them to remove null and empty values
@@ -163,7 +163,7 @@ class PricingRepository extends ServiceEntityRepository
                     $qb->andWhere('p.brand IN ( :brands )');
                     $qb->setParameter('brands', $brands);
                 }
-            } else {
+            } else if ($filters['brand']) {
                 // single mode
                 $qb->andWhere('p.brand = :brand')->setParameter('brand', $filters['brand']);
             }
@@ -255,7 +255,7 @@ class PricingRepository extends ServiceEntityRepository
      * @param  string $val
      * @return mixed
      */
-    private function convertValToGb(string $val): int
+    private function convertAndFilterStringToInt(string $val): int
     {
         $convertedVal = 0;
         if (is_numeric($val)) {

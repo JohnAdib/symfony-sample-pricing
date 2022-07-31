@@ -19,7 +19,7 @@ networks:
 services:
 # -------------------------------------------------- nginx
   nginx:
-    container_name: nginx
+    container_name: pricing_nginx
     build:
       context: .
       dockerfile: ./docker/nginx/Dockerfile
@@ -30,7 +30,7 @@ services:
       - "443:443"
     tty: true
     extra_hosts:
-        - "symfony-sample1.local:127.0.0.1"
+        - "symfony-pricing-sample1.local:127.0.0.1"
     volumes:
       # - nginx_log:/var/log/nginx
       - ./src/:/var/www/html/
@@ -42,7 +42,7 @@ services:
       - php
 # -------------------------------------------------- php
   php:
-    container_name: php
+    container_name: pricing_php
     build:
       context: .
       dockerfile: docker/php/Dockerfile
@@ -60,7 +60,7 @@ services:
       - qanat
 # -------------------------------------------------- mysql - db
   mysql:
-    container_name: mysql
+    container_name: pricing_mysql
     image: mysql
     restart: always
     tty: true
@@ -83,7 +83,7 @@ services:
       - qanat
 # -------------------------------------------------- phpmyadmin
   phpmyadmin:
-    container_name: phpmyadmin
+    container_name: pricing_phpmyadmin
     image: phpmyadmin
     restart: on-failure
     # entrypoint: ["echo", "Service phpmyadmin disabled"]
@@ -102,39 +102,5 @@ services:
       PMA_USER: root
       PMA_PASSWORD: ${MYSQL_ROOT_PASSWORD}
       PMA_ARBITRARY: 1
-# -------------------------------------------------- postgresql
-  database:
-    image: postgres:${POSTGRES_VERSION:-13}-alpine
-    restart: always
-    environment:
-      POSTGRES_DB: ${POSTGRES_DB:-app}
-      TZ: ${TIMEZONE}
-      # You should definitely change the password in production
-      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
-      POSTGRES_USER: ${POSTGRES_USER}
-    volumes:
-      - postgresql_data:/var/lib/postgresql/data:rw
-      # You may use a bind-mounted host directory instead, so that it is harder to accidentally remove the volume and lose all your data!
-      # - ./docker/db/data:/var/lib/postgresql/data:rw
-    ports:
-      - "1254"
-    networks:
-      - qanat
-    profiles: ["postgres"]
-# -------------------------------------------------- adminer
-  adminer:
-    container_name: adminer
-    image: adminer
-    restart: on-failure
-    # entrypoint: ["echo", "Service adminer disabled"]
-    ports:
-      - 8092:8080
-    networks:
-      - qanat
-    depends_on:
-      - nginx
-      - php
-      - database
-    profiles: ["postgres"]
 #
 # eol
