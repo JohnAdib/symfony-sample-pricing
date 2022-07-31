@@ -52,42 +52,43 @@ class PricingRepository extends ServiceEntityRepository
         // add filter - price-min
         if (isset($filters['price-min']) && is_numeric($filters['price-min'])) {
             // @todo change price text to int
-            $qb->where('p.price > :pricemin')->setParameter('pricemin', $filters['price-min']);
+            $qb->andWhere('p.price > :pricemin')->setParameter('pricemin', $filters['price-min']);
         }
         // add filter - price-max
         if (isset($filters['price-max']) && is_numeric($filters['price-max'])) {
             // @todo change price text to int
-            $qb->where('p.price < :pricemax')->setParameter('pricemax', $filters['price-max']);
+            $qb->andWhere('p.price < :pricemax')->setParameter('pricemax', $filters['price-max']);
         }
 
         // add filter - storage-min
         if (isset($filters['storage-min']) && is_numeric($filters['storage-min'])) {
             // @todo change storage text to int
-            $qb->where('p.storage > :storagemin')->setParameter('storagemin', $filters['storage-min']);
+            $qb->andWhere('p.storage > :storagemin')->setParameter('storagemin', $filters['storage-min']);
         }
         // add filter - storage-max
         if (isset($filters['storage-max']) && is_numeric($filters['storage-max'])) {
             // @todo change storage text to int
-            $qb->where('p.storage < :storagemax')->setParameter('storagemax', $filters['storage-max']);
+            $qb->andWhere('p.storage < :storagemax')->setParameter('storagemax', $filters['storage-max']);
         }
 
         // add filter - ram
         if (isset($filters['ram']) && is_array($filters['ram'])) {
             // get list of ram and filter them to remove null and empty values
-            $ram = array_filter($filters['ram']);
-            if (count($ram) >= 1) {
-                $qb->where('p.ram IN ( ' . implode(',', $ram) . ' )');
+            $rams = array_filter($filters['ram']);
+            if (count($rams) >= 1) {
+                $qb->andWhere('p.ram IN ( :rams )');
+                $qb->setParameter('rams', $rams);
             }
         } else {
             // add filter - ram-min
             if (isset($filters['ram-min']) && is_numeric($filters['ram-min'])) {
                 // @todo change ram text to int
-                $qb->where('p.ram > :rammin')->setParameter('rammin', $filters['ram-min']);
+                $qb->andWhere('p.ram > :rammin')->setParameter('rammin', $filters['ram-min']);
             }
             // add filter - ram-max
             if (isset($filters['ram-max']) && is_numeric($filters['ram-max'])) {
                 // @todo change ram text to int
-                $qb->where('p.ram < :rammax')->setParameter('rammax', $filters['ram-max']);
+                $qb->andWhere('p.ram < :rammax')->setParameter('rammax', $filters['ram-max']);
             }
         }
 
@@ -97,18 +98,20 @@ class PricingRepository extends ServiceEntityRepository
             $storageTypes = array_filter($filters['storagetype']);
             // if after filter count of array is 1 or more, apply filter
             if (count($storageTypes) >= 1) {
-                $qb->where('p.storagetype IN ( ' . implode(',', $storageTypes) . ' )');
+                $qb->andWhere('p.storagetype IN ( :storagetypes )');
+                $qb->setParameter('storagetypes', $storageTypes);
+                // $qb->setParameter('storagetypes', $storageTypes, \Doctrine\DBAL\Connection::PARAM_STR_ARRAY);
             }
         }
 
         // add filter - location
         if (isset($filters['location'])) {
-            $qb->where('p.location = :location')->setParameter('location', $filters['location']);
+            $qb->andWhere('p.location = :location')->setParameter('location', $filters['location']);
         }
 
         // add filter - brand
         if (isset($filters['brand'])) {
-            $qb->where('p.brand = :brand')->setParameter('brand', $filters['brand']);
+            $qb->andWhere('p.brand = :brand')->setParameter('brand', $filters['brand']);
         }
 
         // set sort mode - price acs by default
@@ -118,7 +121,7 @@ class PricingRepository extends ServiceEntityRepository
         }
 
         // set order of result
-        switch ($filters['orderby']) {
+        switch ($orderby) {
             case 'asc':
             case 'price-asc':
                 $qb->orderBy('p.price', 'ASC');
@@ -150,12 +153,7 @@ class PricingRepository extends ServiceEntityRepository
                 break;
         }
 
-
-        // // debug
-        // $myQuery = $qb->getQuery();
-        // var_dump($myQuery->getSQL);
-        // var_dump($myQuery->getParameters);
-        // exit();
+        $qb->setMaxResults(1000);
 
         // get result of query
         return $qb->getQuery()->getResult();

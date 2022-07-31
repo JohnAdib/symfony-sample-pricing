@@ -29,7 +29,6 @@ class ApiPricingController extends AbstractController
         var_dump($result);
         exit();
 
-
         // create json response obj
         $response = $this->json($result);
 
