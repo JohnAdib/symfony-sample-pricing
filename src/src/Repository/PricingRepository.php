@@ -55,7 +55,7 @@ class PricingRepository extends ServiceEntityRepository
             $qb->andWhere('p.price > :pricemin')->setParameter('pricemin', $filters['price-min']);
         }
         // add filter - price-max
-        if (isset($filters['price-max']) && is_numeric($filters['price-max'])) {
+        if (isset($filters['price-max']) && is_numeric($filters['price-max']) && $filters['price-max'] > 0) {
             // @todo change price text to int
             $qb->andWhere('p.price < :pricemax')->setParameter('pricemax', $filters['price-max']);
         }
@@ -72,7 +72,7 @@ class PricingRepository extends ServiceEntityRepository
         if (isset($filters['storage-max'])) {
             $storageMax = $filters['storage-max'];
             $storageMax = $this->convertValToGb($storageMax);
-            if (is_numeric($storageMax)) {
+            if (is_numeric($storageMax) && $storageMax > 0) {
                 $qb->andWhere('p.storage < :storagemax')->setParameter('storagemax', $storageMax);
             }
         }
@@ -110,7 +110,7 @@ class PricingRepository extends ServiceEntityRepository
             if (isset($filters['ram-max'])) {
                 $ramMax = $filters['ram-max'];
                 $ramMax = $this->convertValToGb($ramMax);
-                if (is_numeric($ramMax)) {
+                if (is_numeric($ramMax) && $ramMax > 0) {
                     $qb->andWhere('p.ram < :rammax')->setParameter('rammax', $ramMax);
                 }
             }
@@ -153,7 +153,7 @@ class PricingRepository extends ServiceEntityRepository
 
 
         // add filter - brand
-        if (isset($filters['brand'])) {
+        if (isset($filters['brand']) && $filters['brand']) {
             if (is_array($filters['brand'])) {
                 // array mode
                 // get list of brand and filter them to remove null and empty values
