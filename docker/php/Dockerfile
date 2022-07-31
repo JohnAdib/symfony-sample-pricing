@@ -12,8 +12,8 @@ RUN apt install -y apt-utils zip unzip libzip-dev libmcrypt-dev
 RUN apt install -y libonig5 libonig-dev
 RUN docker-php-ext-install mbstring
 # intl
-RUN apt install -y libicu-dev
-RUN docker-php-ext-install intl
+# RUN apt install -y libicu-dev
+# RUN docker-php-ext-install intl
 # bz2
 # RUN apt install -y libbz2-dev pv
 # RUN docker-php-ext-install bz2

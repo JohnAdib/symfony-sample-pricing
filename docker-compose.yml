@@ -19,7 +19,7 @@ networks:
 services:
 # -------------------------------------------------- nginx
   nginx:
-    container_name: pricing_nginx
+    container_name: nginx
     build:
       context: .
       dockerfile: ./docker/nginx/Dockerfile
@@ -42,7 +42,7 @@ services:
       - php
 # -------------------------------------------------- php
   php:
-    container_name: pricing_php
+    container_name: php
     build:
       context: .
       dockerfile: docker/php/Dockerfile
@@ -60,7 +60,7 @@ services:
       - qanat
 # -------------------------------------------------- mysql - db
   mysql:
-    container_name: pricing_mysql
+    container_name: mysql
     image: mysql
     restart: always
     tty: true
@@ -83,7 +83,7 @@ services:
       - qanat
 # -------------------------------------------------- phpmyadmin
   phpmyadmin:
-    container_name: pricing_phpmyadmin
+    container_name: phpmyadmin
     image: phpmyadmin
     restart: on-failure
     # entrypoint: ["echo", "Service phpmyadmin disabled"]
