@@ -5,9 +5,9 @@ RUN apt update
 # usefull tools
 RUN apt install -y apt-utils zip unzip libzip-dev libmcrypt-dev
 # gd
-# RUN apt install -y libfreetype6-dev libjpeg62-turbo-dev libpng-dev
-# RUN docker-php-ext-configure gd --with-freetype --with-jpeg
-# RUN docker-php-ext-install -j$(nproc) gd
+RUN apt install -y libfreetype6-dev libjpeg62-turbo-dev libpng-dev
+RUN docker-php-ext-configure gd --with-freetype --with-jpeg
+RUN docker-php-ext-install -j$(nproc) gd
 # mbstring
 RUN apt install -y libonig5 libonig-dev
 RUN docker-php-ext-install mbstring
