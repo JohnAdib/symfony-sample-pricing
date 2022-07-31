@@ -72,14 +72,24 @@ class PricingRepository extends ServiceEntityRepository
         }
 
         // add filter - ram
-        if (isset($filters['ram']) && is_array($filters['ram'])) {
-            // get list of ram and filter them to remove null and empty values
-            $rams = array_filter($filters['ram']);
-            if (count($rams) >= 1) {
-                $qb->andWhere('p.ram IN ( :rams )');
-                $qb->setParameter('rams', $rams);
+        // ram can filter in 3 mode, array, range and single value
+        if (isset($filters['ram'])) {
+            // array passed - like ram[]=96
+            if (is_array($filters['ram'])) {
+                // array mode
+                // get list of ram and filter them to remove null and empty values
+                $rams = array_filter($filters['ram']);
+                if (count($rams) >= 1) {
+                    $qb->andWhere('p.ram IN ( :rams )');
+                    $qb->setParameter('rams', $rams);
+                }
+            } else {
+                // single mode
+                $qb->andWhere('p.ram = :ram')->setParameter('ram', $filters['ram']);
             }
         } else {
+            // range mode
+
             // add filter - ram-min
             if (isset($filters['ram-min']) && is_numeric($filters['ram-min'])) {
                 // @todo change ram text to int
@@ -93,26 +103,58 @@ class PricingRepository extends ServiceEntityRepository
         }
 
         // add filter - storage type
-        if (isset($filters['storagetype']) && is_array($filters['storagetype'])) {
-            // get list of storagetype and filter them to remove null and empty values
-            $storageTypes = array_filter($filters['storagetype']);
-            // if after filter count of array is 1 or more, apply filter
-            if (count($storageTypes) >= 1) {
-                $qb->andWhere('p.storagetype IN ( :storagetypes )');
-                $qb->setParameter('storagetypes', $storageTypes);
-                // $qb->setParameter('storagetypes', $storageTypes, \Doctrine\DBAL\Connection::PARAM_STR_ARRAY);
+        if (isset($filters['storagetype'])) {
+            if (is_array($filters['storagetype'])) {
+                // array mode
+                // get list of storagetype and filter them to remove null and empty values
+                $storageTypes = array_filter($filters['storagetype']);
+                // if after filter count of array is 1 or more, apply filter
+                if (count($storageTypes) >= 1) {
+                    $qb->andWhere('p.storagetype IN ( :storagetypes )');
+                    $qb->setParameter('storagetypes', $storageTypes);
+                    // $qb->setParameter('storagetypes', $storageTypes, \Doctrine\DBAL\Connection::PARAM_STR_ARRAY);
+                }
+            } else {
+                // single mode
+                $qb->andWhere('p.storagetype = :storagetype')->setParameter('storagetype', $filters['storagetype']);
             }
         }
 
         // add filter - location
         if (isset($filters['location'])) {
-            $qb->andWhere('p.location = :location')->setParameter('location', $filters['location']);
+            if (is_array($filters['location'])) {
+                // array mode
+                // get list of location and filter them to remove null and empty values
+                $locations = array_filter($filters['location']);
+                // if after filter count of array is 1 or more, apply filter
+                if (count($locations) >= 1) {
+                    $qb->andWhere('p.location IN ( :locations )');
+                    $qb->setParameter('locations', $locations);
+                }
+            } else {
+                // single mode
+                $qb->andWhere('p.location = :location')->setParameter('location', $filters['location']);
+            }
         }
+
 
         // add filter - brand
         if (isset($filters['brand'])) {
-            $qb->andWhere('p.brand = :brand')->setParameter('brand', $filters['brand']);
+            if (is_array($filters['brand'])) {
+                // array mode
+                // get list of brand and filter them to remove null and empty values
+                $brands = array_filter($filters['brand']);
+                // if after filter count of array is 1 or more, apply filter
+                if (count($brands) >= 1) {
+                    $qb->andWhere('p.brand IN ( :brands )');
+                    $qb->setParameter('brands', $brands);
+                }
+            } else {
+                // single mode
+                $qb->andWhere('p.brand = :brand')->setParameter('brand', $filters['brand']);
+            }
         }
+
 
         // set sort mode - price acs by default
         $orderby = 'asc';
