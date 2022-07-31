@@ -101,10 +101,14 @@ update submodules, like frontend with below command
 
 ```git submodule update --init --recursive```
 
-try to run docker. it takes some minute to do everything. `-d` for detached mode. but before that you need to config env to set mysql password
+Before running docker you need to config env to set mysql password
 
 - copy `.env.dev` file on root to `.env` and update password of mysql
-- copy `src/backend/.env.dev` to `src/backend/.env.dev` and update mysql password
+- add new file `src/backend/.env.local` and set mysql connection. simply update password
+
+```DATABASE_URL="mysql://root:__PUT_MYSQL_PASS_HERE__@mysql:3306/servers?serverVersion=5.7&charset=utf8mb4"```
+
+Try to run docker. it takes some minute to do everything. `-d` for detached mode.
 
 ```docker compose up --build -d```
 
