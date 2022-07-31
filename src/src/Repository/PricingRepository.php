@@ -91,20 +91,27 @@ class PricingRepository extends ServiceEntityRepository
                 }
             } else {
                 // single mode
-                $qb->andWhere('p.ram = :ram')->setParameter('ram', $filters['ram']);
+                $qb->andWhere('p.ram = :ram')->setParameter('ram', $this->convertValToGb($filters['ram']));
             }
         } else {
             // range mode
 
             // add filter - ram-min
-            if (isset($filters['ram-min']) && is_numeric($filters['ram-min'])) {
-                // @todo change ram text to int
-                $qb->andWhere('p.ram > :rammin')->setParameter('rammin', $filters['ram-min']);
+            if (isset($filters['ram-min'])) {
+                $ramMin = $filters['ram-min'];
+                $ramMin = $this->convertValToGb($ramMin);
+                if (is_numeric($ramMin)) {
+                    $qb->andWhere('p.ram > :rammin')->setParameter('rammin', $ramMin);
+                }
             }
+
             // add filter - ram-max
-            if (isset($filters['ram-max']) && is_numeric($filters['ram-max'])) {
-                // @todo change ram text to int
-                $qb->andWhere('p.ram < :rammax')->setParameter('rammax', $filters['ram-max']);
+            if (isset($filters['ram-max'])) {
+                $ramMax = $filters['ram-max'];
+                $ramMax = $this->convertValToGb($ramMax);
+                if (is_numeric($ramMax)) {
+                    $qb->andWhere('p.ram < :rammax')->setParameter('rammax', $ramMax);
+                }
             }
         }
 
@@ -247,25 +254,28 @@ class PricingRepository extends ServiceEntityRepository
      * @param  string $val
      * @return mixed
      */
-    private function convertValToGb(string $val): mixed
+    private function convertValToGb(string $val): int
     {
+        $convertedVal = 0;
         if (is_numeric($val)) {
-            $queryStr = intval($val);
+            $convertedVal = intval($val);
         } else {
-            $queryStr = mb_strtolower($val);
+            $convertedVal = mb_strtolower($val);
 
             // remove GB from value - for ram and storage or everything
-            if (substr($queryStr, -2) === 'gb') {
-                $queryStr = substr($queryStr, 0, -2);
-                $queryStr = intval($queryStr);
+            if (substr($convertedVal, -2) === 'gb') {
+                $convertedVal = substr($convertedVal, 0, -2);
+                $convertedVal = intval($convertedVal);
             }
             // if we are TB in value
-            else if (substr($queryStr, -2) === 'tb') {
-                $queryStr = substr($queryStr, 0, -2);
-                $queryStr = intval($queryStr) * 1000;
+            else if (substr($convertedVal, -2) === 'tb') {
+                $convertedVal = substr($convertedVal, 0, -2);
+                $convertedVal = intval($convertedVal) * 1000;
+            } else {
+                $convertedVal = 0;
             }
         }
 
-        return $queryStr;
+        return $convertedVal;
     }
 }
