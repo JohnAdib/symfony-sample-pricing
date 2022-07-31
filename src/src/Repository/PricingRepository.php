@@ -30,6 +30,7 @@ class PricingRepository extends ServiceEntityRepository
         }
     }
 
+
     public function remove(Pricing $entity, bool $flush = false): void
     {
         $this->getEntityManager()->remove($entity);
@@ -39,28 +40,62 @@ class PricingRepository extends ServiceEntityRepository
         }
     }
 
-//    /**
-//     * @return Pricing[] Returns an array of Pricing objects
-//     */
-//    public function findByExampleField($value): array
-//    {
-//        return $this->createQueryBuilder('p')
-//            ->andWhere('p.exampleField = :val')
-//            ->setParameter('val', $value)
-//            ->orderBy('p.id', 'ASC')
-//            ->setMaxResults(10)
-//            ->getQuery()
-//            ->getResult()
-//        ;
-//    }
+    /**
+     * @return Pricing[]
+     */
+    public function advanceSearch(array $filters): array
+    {
+        $entityManager = $this->getEntityManager();
+        // create query builder on pricing table
+        $qb = $this->createQueryBuilder('p');
 
-//    public function findOneBySomeField($value): ?Pricing
-//    {
-//        return $this->createQueryBuilder('p')
-//            ->andWhere('p.exampleField = :val')
-//            ->setParameter('val', $value)
-//            ->getQuery()
-//            ->getOneOrNullResult()
-//        ;
-//    }
+
+        // add filter - storage type
+        if (isset($filters['storagetype'])) {
+            // get list of storagetype and filter them to remove null and empty values
+            $storageTypes = array_filter($filters['storagetype']);
+            $storageTypesIn = implode(',', $storageTypes);
+            $qb->where('p.storagetype IN ( ' . $storageTypesIn . ' )');
+        }
+
+        // var_dump($qb);
+        // var_dump($filters);
+        // exit();
+
+        // $newerThan = '';
+        // $qb->where('p.access > :newerThan')->setParameter('newerThan', $newerThan);
+
+
+        // set sort mode - price acs by default
+        $qb->orderBy('p.price', 'ASC');
+
+        // get result of query
+        return $qb->getQuery()->getResult();
+    }
+
+
+    //    /**
+    //     * @return Pricing[] Returns an array of Pricing objects
+    //     */
+    //    public function findByExampleField($value): array
+    //    {
+    //        return $this->createQueryBuilder('p')
+    //            ->andWhere('p.exampleField = :val')
+    //            ->setParameter('val', $value)
+    //            ->orderBy('p.id', 'ASC')
+    //            ->setMaxResults(10)
+    //            ->getQuery()
+    //            ->getResult()
+    //        ;
+    //    }
+
+    //    public function findOneBySomeField($value): ?Pricing
+    //    {
+    //        return $this->createQueryBuilder('p')
+    //            ->andWhere('p.exampleField = :val')
+    //            ->setParameter('val', $value)
+    //            ->getQuery()
+    //            ->getOneOrNullResult()
+    //        ;
+    //    }
 }

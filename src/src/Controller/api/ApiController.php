@@ -26,17 +26,17 @@ class ApiController extends AbstractController
                     // select or radio
                     '/api/pricing?location=SIN-11',
                     '/api/pricing?brand=Huawei',
-                    '/api/pricing?hdd=sas',
+                    '/api/pricing?storagetype=sas',
                     '/api/pricing?ram=96gb',
                     // checkbox
-                    '/api/pricing?hdd[]=ssd&hdd[]=sas',
+                    '/api/pricing?storagetype[]=ssd&storagetype[]=sas',
                     '/api/pricing?ram[]=4&ram[]=8&ram[]=96',
                     // range
                     '/api/pricing?storage-min=300&storage-max=500',
                     '/api/pricing?ram-min=32&ram-max=96',
                     // multiple
-                    '/api/pricing?hdd[]=ssd&location=AMS-01&ram-min=32&ram-max=96',
-                    '/api/pricing?hdd[]=ssd&location=AMS-01&ram-min=32&ram-max=96&storage-min=200&storage-max=300',
+                    '/api/pricing?storagetype[]=ssd&location=AMS-01&ram-min=32&ram-max=96',
+                    '/api/pricing?storagetype[]=ssd&location=AMS-01&ram-min=32&ram-max=96&storage-min=200&storage-max=300',
                 ],
             ];
 
