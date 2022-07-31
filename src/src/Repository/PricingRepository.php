@@ -85,6 +85,7 @@ class PricingRepository extends ServiceEntityRepository
                 // array mode
                 // get list of ram and filter them to remove null and empty values
                 $rams = array_filter($filters['ram']);
+                $rams = array_map(array($this, 'convertValToGb'), $rams);
                 if (count($rams) >= 1) {
                     $qb->andWhere('p.ram IN ( :rams )');
                     $qb->setParameter('rams', $rams);
