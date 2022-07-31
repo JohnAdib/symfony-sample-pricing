@@ -97,17 +97,19 @@ Go to cloned folder
 
 ```cd symfony-sample-pricing```
 
-If you wanna update submodule you can run below command
+update submodules, like frontend with below command
 
 ```git submodule update --init --recursive```
 
-try to run docker. it takes some minute to do everything. > 7 min for first run
+try to run docker. it takes some minute to do everything. `-d` for detached mode. but before that you need to config env to set mysql password
 
-```docker compose up --build```
-
-If you wanna to run containers in the background use below command - detached mode
+- copy `.env.dev` file on root to `.env` and update password of mysql
+- copy `src/backend/.env.dev` to `src/backend/.env.dev` and update mysql password
 
 ```docker compose up --build -d```
+
+
+
 
 If you have problem with composer, you must find *CONTAINER ID* with `docker ps` command. Then run `docker exec -it 123`. Then you are inside container, so run `composer install`. now installation is done.
 

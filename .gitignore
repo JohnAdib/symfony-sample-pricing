@@ -53,3 +53,5 @@
 /symfony-sample-pricing.code-workspace
 
 .idea/
+# git ignore .env file because of mysql password
+/.env
