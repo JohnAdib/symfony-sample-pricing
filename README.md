@@ -126,6 +126,8 @@ Finally, open IP address or point some URL to server. For temporary usage below 
 
 ## Checklist
 
+### Backend Checklist
+
 - [x] write readme
 - [x] write installation manual
 - [ ] implement a class to read from Excel
@@ -143,3 +145,27 @@ Finally, open IP address or point some URL to server. For temporary usage below 
 - [x] allow to filter all fileds together
 - [x] allow to sort output based on range values
 - [ ] enable http cache to improve performance
+
+### Frontend Checklist
+
+- [x] choose layout of page
+- [ ] add header
+- [ ] add range slider
+- [x] add radio
+- [x] add checkbox
+- [x] add dropdown
+- [ ] add order by
+- [x] design of each server
+- [x] responsive design
+- [ ] load init data
+- [ ] design empty state
+- [ ] design filter without result state
+- [x] fetch servers data from api
+- [x] apply filters and get updated data
+- [ ] get list of filters from api
+- [x] don't send request if user play with filters
+- [x] cancel last request if user changes filters
+- [ ] add link to api page
+- [ ] add link to MrAdib.com
+- [ ] show count of each filter for radio and checkbox
+- [ ] improve design of locations
