@@ -156,12 +156,13 @@ Finally, open IP address or point some URL to server. For temporary usage below 
 - [x] add radio
 - [x] add checkbox
 - [x] add dropdown
-- [ ] add order by
+- [x] add order by
 - [x] design of each server
 - [x] responsive design
 - [x] load init data
 - [x] design empty state
-- [ ] design filter without result state
+- [x] design filter without result state
+- [x] design loading state
 - [x] fetch servers data from api
 - [x] apply filters and get updated data
 - [ ] get list of filters from api
