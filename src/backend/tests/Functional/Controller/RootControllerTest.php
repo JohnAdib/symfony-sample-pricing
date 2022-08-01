@@ -6,14 +6,14 @@ namespace App\Tests\Functional\Controller;
 
 use Symfony\Bundle\FrameworkBundle\Test\WebTestCase;
 
-class ApiControllerTest extends WebTestCase
+class RootControllerTest extends WebTestCase
 {
-    public function testRouteApiRootUrl()
+    public function testRouteRootUrl()
     {
         $client = static::createClient();
 
         // check simple get - we must get 200
-        $client->request('GET', '/api');
+        $client->request('GET', '/');
         $this->assertResponseIsSuccessful();
     }
 }
