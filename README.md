@@ -132,6 +132,7 @@ Finally, open IP address or point some URL to server. For temporary usage below 
 - [x] write installation manual
 - [ ] implement a class to read from Excel
 - [x] import data to database
+- [ ] empty table before new import
 - [ ] add index to search fields
 - [x] extract important data from values and save inside new fields
 - [ ] check exactly duplicate records and only insert once
@@ -172,3 +173,5 @@ Finally, open IP address or point some URL to server. For temporary usage below 
 - [x] add link to MrAdib.com
 - [ ] show count of each filter for radio and checkbox
 - [ ] improve design of locations
+- [ ] change url params based on filters
+- [ ] read init state from url params
