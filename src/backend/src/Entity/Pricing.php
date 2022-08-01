@@ -19,6 +19,7 @@ use Doctrine\ORM\Mapping\Index;
 #[Index(name: "idx_city", columns: ["city"])]
 #[Index(name: "idx_currency", columns: ["currency"])]
 #[Index(name: "idx_price", columns: ["price"])]
+#[Index(name: "idx_unique_record", columns: ["model", "ram", "ramtype", "storagetxt", "location", "currency", "price"])]
 class Pricing
 {
     #[ORM\Id]
