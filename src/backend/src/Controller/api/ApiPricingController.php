@@ -30,10 +30,10 @@ class ApiPricingController extends AbstractController
         $response = $this->json($result);
 
         // set cache publicly
-        // $response->setPublic();
+        $response->setPublic();
 
         // set cache for 3600 seconds = 1 hour
-        // $response->setMaxAge(3600);
+        $response->setMaxAge(3600);
 
         // set a custom Cache-Control directive
         $response->headers->addCacheControlDirective('must-revalidate', true);
