@@ -16,9 +16,9 @@ class ApiPricingController extends AbstractController
     public function info(ManagerRegistry $doctrine, Request $request): JsonResponse
     {
         // set header for cors
-        header('Access-Control-Allow-Origin:*');
-        header('Access-Control-Allow-Headers:*');
-        header('X-Powered-By:MrAdib');
+        @header('Access-Control-Allow-Origin:*');
+        @header('Access-Control-Allow-Headers:*');
+        @header('X-Powered-By:MrAdib');
 
         // get all parameters to use as filter
         $allParameters = $request->query->all();
