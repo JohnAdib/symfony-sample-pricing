@@ -160,7 +160,7 @@ Finally, open IP address or point some URL to server. For temporary usage below 
 - [x] design of each server
 - [x] responsive design
 - [x] load init data
-- [ ] design empty state
+- [x] design empty state
 - [ ] design filter without result state
 - [x] fetch servers data from api
 - [x] apply filters and get updated data
