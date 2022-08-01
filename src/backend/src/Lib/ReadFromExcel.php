@@ -11,7 +11,7 @@ use Symfony\Component\Filesystem\Filesystem;
  */
 class ReadFromExcel
 {
-    private $EXCEL_ADDR;
+    private string $EXCEL_ADDR;
 
 
     /**
@@ -39,14 +39,23 @@ class ReadFromExcel
 
 
     /**
+     * return temporary url of excel file get from remote url
+     *
+     * @return string
+     */
+    public function getExcelTmpAddr(): string
+    {
+        return $this->EXCEL_ADDR;
+    }
+
+
+    /**
      * open xlsx and read excel data
      *
      * @return array value of all filled cells inside xlsx file
      */
     public function fetch(string $sheetname): array
     {
-        $sheetname = 'Sheet2';
-
         // Identify the type of $filePath
         $inputFileType = \PhpOffice\PhpSpreadsheet\IOFactory::identify($this->EXCEL_ADDR);
 
