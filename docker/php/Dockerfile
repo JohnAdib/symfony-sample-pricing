@@ -36,10 +36,10 @@ RUN curl -1sLf 'https://dl.cloudsmith.io/public/symfony/stable/setup.deb.sh' | b
 RUN apt install -y symfony-cli
 
 # Install yarn
-RUN apt install -y yarn
+#RUN apt install -y yarn
 
 # Install npm for tailwind
-RUN apt install -y npm
+#RUN apt install -y npm
 
 # Install composer
 RUN curl -sS https://getcomposer.org/installer | php -- --install-dir=/usr/local/bin --filename=composer
