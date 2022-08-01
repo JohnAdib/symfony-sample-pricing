@@ -8,7 +8,7 @@ use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpKernel\KernelInterface;
 use Doctrine\Persistence\ManagerRegistry;
 use App\Entity\Pricing;
-use App\Lib\ReadFromExcel;
+use App\Lib\ReadFileExcel;
 
 
 class ApiPricingImportController extends AbstractController
@@ -27,10 +27,10 @@ class ApiPricingImportController extends AbstractController
             $url_excel_remote = $kernel->getProjectDir() . $_ENV['EXCEL_URL_LOCAL'];
 
             // read data from excel
-            $excelReaderObj = new ReadFromExcel($url_excel_remote);
+            $excelReaderObj = new ReadFileExcel($url_excel_remote);
 
             // read excel data
-            $excelData = $excelReaderObj->fetch('Sheet2');
+            $excelData = $excelReaderObj->fetchDataArray('Sheet2');
 
             // call insert fn on model
             $this->insertDataIntoDb($excelData, $doctrine);

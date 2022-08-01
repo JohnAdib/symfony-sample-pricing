@@ -5,9 +5,9 @@ declare(strict_types=1);
 namespace App\Tests\Unit\Lib;
 
 use PHPUnit\Framework\TestCase;
-use App\Lib\ReadFromExcel;
+use App\Lib\ReadFileExcel;
 
-final class ReadFromExcelTest extends TestCase
+final class ReadFileExcelTest extends TestCase
 {
     private const TOTAL_RECORD = 487;
 
@@ -29,15 +29,15 @@ final class ReadFromExcelTest extends TestCase
     }
 
 
-    public function testReadFromExcelAndReturnArray(): void
+    public function testReadFileExcelAndReturnArray(): void
     {
         // get remote url from env
         $filePathXlsx = $this->getExcelFileRemoteUrl();
 
         // create new object from reader
-        $excelReaderObj = new ReadFromExcel($filePathXlsx);
+        $excelReaderObj = new ReadFileExcel($filePathXlsx);
         // get tmp file location
-        $tmpFileAddr = $excelReaderObj->getExcelTmpAddr();
+        $tmpFileAddr = $excelReaderObj->getFileAddr();
 
         // check tmp xlsx file exist
         $this->assertFileExists($tmpFileAddr);
@@ -47,7 +47,7 @@ final class ReadFromExcelTest extends TestCase
         $this->assertFileIsWritable($tmpFileAddr);
 
         // fetch excel data into array
-        $excelArray = $excelReaderObj->fetch('Sheet2');
+        $excelArray = $excelReaderObj->fetchDataArray('Sheet2');
         // check count of excel data
         $this->assertCount(self::TOTAL_RECORD, $excelArray);
     }
