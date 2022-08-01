@@ -151,15 +151,15 @@ Finally, open IP address or point some URL to server. For temporary usage below 
 ### Frontend Checklist
 
 - [x] choose layout of page
-- [ ] add header
-- [ ] add range slider
+- [x] add header
+- [x] add range slider
 - [x] add radio
 - [x] add checkbox
 - [x] add dropdown
 - [ ] add order by
 - [x] design of each server
 - [x] responsive design
-- [ ] load init data
+- [x] load init data
 - [ ] design empty state
 - [ ] design filter without result state
 - [x] fetch servers data from api
@@ -167,7 +167,7 @@ Finally, open IP address or point some URL to server. For temporary usage below 
 - [ ] get list of filters from api
 - [x] don't send request if user play with filters
 - [x] cancel last request if user changes filters
-- [ ] add link to api page
-- [ ] add link to MrAdib.com
+- [x] add link to api page
+- [x] add link to MrAdib.com
 - [ ] show count of each filter for radio and checkbox
 - [ ] improve design of locations
