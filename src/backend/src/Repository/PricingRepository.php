@@ -21,6 +21,7 @@ class PricingRepository extends ServiceEntityRepository
         parent::__construct($registry, Pricing::class);
     }
 
+
     public function add(Pricing $entity, bool $flush = false): void
     {
         $this->getEntityManager()->persist($entity);
@@ -39,6 +40,17 @@ class PricingRepository extends ServiceEntityRepository
             $this->getEntityManager()->flush();
         }
     }
+
+
+    public function removeAllRecords(): int
+    {
+        $qb = $this->createQueryBuilder('p');
+
+        $qb->delete();
+
+        return $qb->getQuery()->getSingleScalarResult() ?? 0;
+    }
+
 
     /**
      * @return Pricing[]

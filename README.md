@@ -132,13 +132,13 @@ Finally, open IP address or point some URL to server. For temporary usage below 
 - [x] write installation manual
 - [ ] implement a class to read from Excel
 - [x] import data to database
-- [ ] empty table before new import
+- [x] empty table before new import
 - [ ] add index to search fields
 - [x] extract important data from values and save inside new fields
 - [ ] check exactly duplicate records and only insert once
 - [ ] check duplicate record without price and only insert once
 - [x] allow access to import database after change Excel file - route via /import url
-- [x] route url for api to show result
+- [x] route url for API to show result
 - [x] successfully show list of servers
 - [x] unit test
 - [x] functional test
@@ -148,6 +148,7 @@ Finally, open IP address or point some URL to server. For temporary usage below 
 - [x] allow to filter all fileds together
 - [x] allow to sort output based on range values
 - [x] enable http cache to improve performance
+- [ ] return list of each filter with count of it via API
 
 ### Frontend Checklist
 
@@ -164,12 +165,12 @@ Finally, open IP address or point some URL to server. For temporary usage below 
 - [x] design empty state
 - [x] design filter without result state
 - [x] design loading state
-- [x] fetch servers data from api
+- [x] fetch servers data from API
 - [x] apply filters and get updated data
-- [ ] get list of filters from api
+- [ ] get list of filters from API
 - [x] don't send request if user play with filters
 - [x] cancel last request if user changes filters
-- [x] add link to api page
+- [x] add link to API page
 - [x] add link to MrAdib.com
 - [ ] show count of each filter for radio and checkbox
 - [ ] improve design of locations

@@ -47,6 +47,8 @@ class ApiPricingImportController extends AbstractController
 
     private function insertDataIntoDb(array $datalist, ManagerRegistry $doctrine): void
     {
+        // call removeAllRecords
+        $result = $doctrine->getManager()->getRepository(Pricing::class)->removeAllRecords();
 
         foreach ($datalist as $row => $dataline) {
             if ($row === 0) {
@@ -127,7 +129,7 @@ class ApiPricingImportController extends AbstractController
                 $args['currency'] = '$';
                 $args['price'] = floatval(mb_substr($price, 1));
             } else if (mb_substr($price, 0, 2) === 'S$') {
-                $args['currency'] = '$';
+                $args['currency'] = 'S$';
                 $args['price'] = floatval(mb_substr($price, 2));
             }
 
