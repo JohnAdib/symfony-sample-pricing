@@ -14,7 +14,7 @@ This is a simple program that uses an Excel file as a data source and presents t
 - [x] Maintainable
 - [x] Code quality
 - [x] Application structure
-- [x] User interface
+- [x] [User interface - Seperated respository used as Git submodule](https://github.com/MrJavadAdib/symfony-sample-pricing-ui)
 - [x] Optimization - load times and rendering performance
 
 If something is unclear regarding the scope of the assignment, you can make reasonable assumptions.
