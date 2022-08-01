@@ -5,8 +5,20 @@ namespace App\Entity;
 use App\Repository\PricingRepository;
 use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
+use Doctrine\ORM\Mapping\Index;
 
 #[ORM\Entity(repositoryClass: PricingRepository::class)]
+#[Index(name: "idx_model", columns: ["model"])]
+#[Index(name: "idx_brand", columns: ["brand"])]
+#[Index(name: "idx_ram", columns: ["ram"])]
+#[Index(name: "idx_ramtype", columns: ["ramtype"])]
+#[Index(name: "idx_storage", columns: ["storage"])]
+#[Index(name: "idx_storagetype", columns: ["storagetype"])]
+#[Index(name: "idx_storagetxt", columns: ["storagetxt"])]
+#[Index(name: "idx_location", columns: ["location"])]
+#[Index(name: "idx_city", columns: ["city"])]
+#[Index(name: "idx_currency", columns: ["currency"])]
+#[Index(name: "idx_price", columns: ["price"])]
 class Pricing
 {
     #[ORM\Id]

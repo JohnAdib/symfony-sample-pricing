@@ -130,10 +130,10 @@ Finally, open IP address or point some URL to server. For temporary usage below 
 
 - [x] write readme
 - [x] write installation manual
-- [ ] implement a class to read from Excel
+- [x] implement a class to read from Excel - OOP
 - [x] import data to database
 - [x] empty table before new import
-- [ ] add index to search fields
+- [x] add index to search fields
 - [x] extract important data from values and save inside new fields
 - [ ] check exactly duplicate records and only insert once
 - [ ] check duplicate record without price and only insert once
