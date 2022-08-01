@@ -139,12 +139,14 @@ Finally, open IP address or point some URL to server. For temporary usage below 
 - [x] allow access to import database after change Excel file - route via /import url
 - [x] route url for api to show result
 - [x] successfully show list of servers
+- [x] unit test
+- [x] functional test
 - [x] allow to filter single values like datacenter, brand, storagetype, ram
 - [x] allow to filter multiple values like datacenter, brand, storagetype, ram
 - [x] allow to filter range values like price, storage, ram
 - [x] allow to filter all fileds together
 - [x] allow to sort output based on range values
-- [ ] enable http cache to improve performance
+- [x] enable http cache to improve performance
 
 ### Frontend Checklist
 
