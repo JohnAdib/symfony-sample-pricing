@@ -405,32 +405,69 @@ class PricingRepository extends ServiceEntityRepository
     }
 
 
+    // get list of filters and return it
     public function getFilters(): array
     {
         $filters =
             [
-                'brand'       => $this->groupBy('brand'),
-                'ram'         => $this->groupBy('ram'),
-                'storage'     => $this->groupBy('storage'),
-                'storagetype' => $this->groupBy('storagetype'),
-                'location'    => $this->groupBy('location'),
+                'brand'       => $this->groupByFieldWithCount('brand'),
+                'ram'         => $this->groupByFieldWithCount('ram'),
+                'storage'     => $this->groupByFieldWithCount('storage'),
+                'storagetype' => $this->groupByFieldWithCount('storagetype'),
+                'location'    => $this->groupByFieldWithCount('location'),
+                'orderby'     => $this->listOfOrderBy()
             ];
 
         return $filters;
     }
 
 
-    public function groupBy($field): ?array
+    private function listOfOrderBy()
     {
+        return [
+            'Price - Low to High'   => 'price-asc',
+            'Price - High to Low'   => 'price-desc',
+            'Ram - Low to High'     => 'ram-asc',
+            'Ram - High to Low'     => 'ram-desc',
+            'Storage - Low to High' => 'storage-asc',
+            'Storage - High to Low' => 'storage-desc',
+        ];
+    }
+
+
+    /**
+     * group by on some field and return array of value => count
+     *
+     * @param  [type]     $field
+     * @return array|null
+     */
+    public function groupByFieldWithCount($field): ?array
+    {
+        // limit groupby on some fields
         $field = match ($field) {
             'brand', 'ram', 'ramtype', 'storage', 'storagetype', 'location', 'currency' => $field,
             default => null
         };
-
+        // if field is not valid return null
         if (!$field) {
             return null;
         }
 
-        return $this->createQueryBuilder('p')->select('p.' . $field, 'COUNT(p) as count')->groupBy('p.' . $field)->getQuery()->getResult();
+        // get result from db
+        $data = $this->createQueryBuilder('p')->select('p.' . $field, 'COUNT(p) as count')->groupBy('p.' . $field)->getQuery()->getResult();
+
+        if (is_array($data)) {
+            // get keys and values
+            $keys = array_column($data, $field);
+            $values = array_column($data, 'count');
+
+            // simplify array to value => count
+            $result = array_combine($keys, $values);
+
+            // return result
+            return $result;
+        }
+
+        return null;
     }
 }
