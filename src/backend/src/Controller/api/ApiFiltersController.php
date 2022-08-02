@@ -1,5 +1,5 @@
 <?php
-// src/Controller/api/ApiPricingController.php
+// src/Controller/api/ApiFiltersController.php
 namespace App\Controller\api;
 
 use Symfony\Component\Routing\Annotation\Route;
@@ -10,7 +10,7 @@ use Doctrine\Persistence\ManagerRegistry;
 use App\Entity\Pricing;
 
 
-class ApiPricingController extends AbstractController
+class ApiFiltersController extends AbstractController
 {
     #[Route('/api/filters', methods: ['GET', 'HEAD'])]
     public function info(ManagerRegistry $doctrine, Request $request): JsonResponse
