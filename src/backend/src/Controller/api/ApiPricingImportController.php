@@ -17,9 +17,6 @@ class ApiPricingImportController extends AbstractController
     public function info(KernelInterface $kernel, ManagerRegistry $doctrine): JsonResponse
     {
         try {
-            // @todo remove old records from database
-            // because before each call of import we need empty table
-
             // get files url on remote and locatl
             // $url_excel_remote = $_ENV['EXCEL_URL'];
 
@@ -153,76 +150,98 @@ class ApiPricingImportController extends AbstractController
      * @param  array               $dataline
      * @return \App\Entity\Pricing
      */
-    private function extractServerDetail(int $row, array $dataline): Pricing
+    private function extractServerDetail(int $row, array $datarow): Pricing
     {
         // define array to save values
         $args = [];
 
         // cast array to object to use nullsafe operator
-        $datarowObj = (object) $dataline;
+        $datarowObj = (object) $datarow;
 
         // model
-        $args['model'] = $datarowObj?->{'0'};
+        if (isset($datarow[0])) {
+            $args['model'] = $datarow[0];
 
-        // brand
-        $args['brand'] = strtok($args['model'], ' ');
+            // brand
+            $args['brand'] = strtok($args['model'], ' ');
+        }
 
         // ram
-        $ramTxt          = $datarowObj?->{'1'};
-        $args['ram']     = intval(strtok($ramTxt, 'G'));
-        $args['ramtype'] = substr($ramTxt, strlen($args['ram']) + 2);
+        if (isset($datarow[1])) {
+            $ramTxt          = $datarow[1];
+            $args['ram']     = intval(strtok($ramTxt, 'G'));
+            $args['ramtype'] = substr($ramTxt, strlen($args['ram']) + 2);
+        }
 
         // storage
-        $hddTxt = $datarowObj?->{'2'};
-        $args['storagetxt'] = $hddTxt;
-        // extract storage type
-        if (substr($hddTxt, -5) === 'SATA2') {
-            $hddTxt = substr($hddTxt, 0, -5);
-            $args['storagetype'] = 'SATA';
-        } else if (substr($hddTxt, -3) === 'SSD') {
-            $hddTxt = substr($hddTxt, 0, -3);
-            $args['storagetype'] = 'SSD';
-        } else if (substr($hddTxt, -3) === 'SAS') {
-            $hddTxt = substr($hddTxt, 0, -3);
-            $args['storagetype'] = 'SAS';
+        if (isset($datarow[2])) {
+            $hddTxt = $datarow[2];
+            $args['storagetxt'] = $hddTxt;
+            // extract storage type
+            if (substr($hddTxt, -5) === 'SATA2') {
+                $hddTxt = substr($hddTxt, 0, -5);
+                $args['storagetype'] = 'SATA';
+            } else if (substr($hddTxt, -3) === 'SSD') {
+                $hddTxt = substr($hddTxt, 0, -3);
+                $args['storagetype'] = 'SSD';
+            } else if (substr($hddTxt, -3) === 'SAS') {
+                $hddTxt = substr($hddTxt, 0, -3);
+                $args['storagetype'] = 'SAS';
+            }
+
+            // extract hdd count
+            $hddCount = intval(strtok($hddTxt, 'x'));
+            $hddEachCapacity = null;
+            // calc each capacity
+            $hddTxt = substr($hddTxt, strpos($hddTxt, 'x') + 1);
+            if (substr($hddTxt, -2) === 'TB') {
+                $hddEachCapacity = intval(substr($hddTxt, 0, -2)) * 1000;
+            } else if (substr($hddTxt, -2) === 'GB') {
+                $hddEachCapacity = intval(substr($hddTxt, 0, -2));
+            }
+            // calc totalCapacity
+            if (!is_int($hddCount) || !is_int($hddEachCapacity)) {
+                // count or capacity is not int
+                // thrown error
+            }
+            $args['storage'] = $hddCount * $hddEachCapacity;
         }
-        // extract hdd count
-        $hddCount = intval(strtok($hddTxt, 'x'));
-        // calc each capacity
-        $hddTxt = substr($hddTxt, strpos($hddTxt, 'x') + 1);
-        if (substr($hddTxt, -2) === 'TB') {
-            $hddEachCapacity = intval(substr($hddTxt, 0, -2)) * 1000;
-        } else if (substr($hddTxt, -2) === 'GB') {
-            $hddEachCapacity = intval(substr($hddTxt, 0, -2));
-        }
-        // calc totalCapacity
-        if (!is_int($hddCount) || !is_int($hddEachCapacity)) {
-            // count or capacity is not int
-            // thrown error
-        }
-        $args['storage'] = $hddCount * $hddEachCapacity;
+
+
 
         // location
-        $location = $datarowObj?->{'3'};
-        // extract location code
-        $locationCode = substr($location, -2);
-        // extract location iso
-        $locationIso = substr($location, strpos($location, '-') - 3, 3);
-        // extract location cityName
-        $args['city'] = substr($location, 0, strpos($location, '-') - 3);
-        // extract location zone
-        $args['location'] = $locationIso . '-' . $locationCode;
+        if (isset($datarow[3])) {
+            $location = $datarow[3];
+            // extract location code
+            $locationCode = substr($location, -2);
+            $locationDashPos = strpos($location, '-') - 3;
+            if ($locationDashPos > 0) {
+                // extract location iso
+                $locationIso = substr($location, $locationDashPos, 3);
+                // extract location cityName
+                $args['city'] = substr($location, 0, $locationDashPos);
+                // extract location zone
+                if ($locationIso && $locationCode) {
+                    $args['location'] = $locationIso . '-' . $locationCode;
+                }
+            }
+        }
+
+
 
         // price
-        $price = $datarowObj?->{'4'};
-        if ($price) {
+        if (isset($datarow[4])) {
+            $price = $datarow[4];
 
             // get price amount
             $amount = preg_replace('/[^0-9\.,]*/i', '', $price);
-            $args['price'] = floatval($amount);
-            // everything else is currency
-            $args['currency'] = str_replace($amount, '', $price);
+            if ($amount) {
+                $args['price'] = floatval($amount);
+                // everything else is currency
+                $args['currency'] = str_replace($amount, '', $price);
+            }
         }
+
 
 
 
@@ -231,6 +250,7 @@ class ApiPricingImportController extends AbstractController
 
         // if we detect less than 11 fields, data is not correct
         if (count($args) !== 11) {
+            var_dump($args);
             // error on data
             throw new \Exception("ExcelData-DataProblem - row " . $row);
         }
