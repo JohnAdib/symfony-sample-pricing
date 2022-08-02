@@ -123,12 +123,12 @@ class PricingRepository extends ServiceEntityRepository
         // add filter - price-min
         if (isset($filters['price-min']) && is_numeric($filters['price-min'])) {
             // @todo change price text to int
-            $qb->andWhere('p.price > :pricemin')->setParameter('pricemin', $this->convertAndFilterStringToInt($filters['price-min']));
+            $qb->andWhere('p.price >= :pricemin')->setParameter('pricemin', $this->convertAndFilterStringToInt($filters['price-min']));
         }
         // add filter - price-max
         if (isset($filters['price-max']) && is_numeric($filters['price-max']) && $filters['price-max'] > 0) {
             // @todo change price text to int
-            $qb->andWhere('p.price < :pricemax')->setParameter('pricemax', $this->convertAndFilterStringToInt($filters['price-max']));
+            $qb->andWhere('p.price <= :pricemax')->setParameter('pricemax', $this->convertAndFilterStringToInt($filters['price-max']));
         }
 
         // add filter - storage-min
@@ -136,7 +136,7 @@ class PricingRepository extends ServiceEntityRepository
             $storageMin = $filters['storage-min'];
             $storageMin = $this->convertAndFilterStringToInt($storageMin);
             if (is_numeric($storageMin) && $storageMin) {
-                $qb->andWhere('p.storage > :storagemin')->setParameter('storagemin', $storageMin);
+                $qb->andWhere('p.storage >= :storagemin')->setParameter('storagemin', $storageMin);
             }
         }
         // add filter - storage-max
@@ -144,7 +144,7 @@ class PricingRepository extends ServiceEntityRepository
             $storageMax = $filters['storage-max'];
             $storageMax = $this->convertAndFilterStringToInt($storageMax);
             if (is_numeric($storageMax) && $storageMax) {
-                $qb->andWhere('p.storage < :storagemax')->setParameter('storagemax', $storageMax);
+                $qb->andWhere('p.storage <= :storagemax')->setParameter('storagemax', $storageMax);
             }
         }
 
@@ -173,7 +173,7 @@ class PricingRepository extends ServiceEntityRepository
                 $ramMin = $filters['ram-min'];
                 $ramMin = $this->convertAndFilterStringToInt($ramMin);
                 if (is_numeric($ramMin)) {
-                    $qb->andWhere('p.ram > :rammin')->setParameter('rammin', $ramMin);
+                    $qb->andWhere('p.ram >= :rammin')->setParameter('rammin', $ramMin);
                 }
             }
 
@@ -182,7 +182,7 @@ class PricingRepository extends ServiceEntityRepository
                 $ramMax = $filters['ram-max'];
                 $ramMax = $this->convertAndFilterStringToInt($ramMax);
                 if (is_numeric($ramMax) && $ramMax > 0) {
-                    $qb->andWhere('p.ram < :rammax')->setParameter('rammax', $ramMax);
+                    $qb->andWhere('p.ram <= :rammax')->setParameter('rammax', $ramMax);
                 }
             }
         }
@@ -405,53 +405,122 @@ class PricingRepository extends ServiceEntityRepository
     }
 
 
-    // get list of filters and return it
+    /**
+     * get list of filters and return it
+     *
+     * @return array
+     */
     public function getFilters(): array
     {
+        $brandList = $this->groupByFieldWithCount('brand', true);
+        array_unshift($brandList, ['title' => 'All', 'value' => '']);
+
         $filters = [
-            'brand'        => $this->groupByFieldWithCount('brand', true),
-            'ram'          => $this->groupByFieldWithCount('ram'),
-            'ramRange'     => [],
-            'storage'      => $this->groupByFieldWithCount('storage'),
-            'storageRange' => [],
-            'storagetype'  => $this->groupByFieldWithCount('storagetype', true),
-            'location'     => $this->groupByFieldWithCount('location', true),
-            'orderby'      => $this->listOfOrderBy()
+            [
+                'type'  => 'range',
+                'title' => 'Storage',
+                'name'  => 'storage',
+                'data'  => []
+            ],
+            [
+                'type'  => 'range',
+                'title' => 'Ram',
+                'name'  => 'ram',
+                'data'  => []
+            ],
+            [
+                'type'  => 'checkbox',
+                'title' => 'Storage Type',
+                'name'  => 'storagetype',
+                'data'  => $this->groupByFieldWithCount('storagetype', true)
+            ],
+            [
+                'type'  => 'radio',
+                'title' => 'Datacenter Locations',
+                'name'  => 'location',
+                'data'  => $this->groupByFieldWithCount('location', true)
+            ],
+            [
+                'type'  => 'dropdown',
+                'title' => 'Brand',
+                'name'  => 'brand',
+                'data'  => $brandList
+            ],
+            [
+                'type'  => 'dropdown',
+                'title' => 'Sort by',
+                'name'  => 'orderby',
+                'data'  => $this->listOfOrderBy()
+            ],
         ];
 
         // add ram range
-        foreach ($filters['ram'] as $key => $value) {
-            $filters['ramRange'][$key . 'GB'] = $value;
+        $myRamList = $this->groupByFieldWithCount('ram');
+        $ramData = [];
+        foreach ($myRamList as $key => $value) {
+            $ramData[$key]['count'] = $value['count'];
+            $ramData[$key]['value'] = $value['title'];
+            $ramData[$key]['title'] = $value['title'] . 'GB';
         }
+        $filters[1]['data'] = $ramData;
+        $filters[1]['range'] = array_column($ramData, 'title');
 
         // add storage range
         // $storageDefinedRange = [0, 250, 500, 1000, 2000, 3000, 4000, 8000, 12000, 24000, 48000, 72000];
-        foreach ($filters['storage'] as $key => $value) {
-            if ($key >= 1000) {
-                $keyName = round($key / 1000) . 'TB';
-                if (isset($filters['storageRange'][$keyName])) {
-                    $filters['storageRange'][$keyName] += $value;
-                } else {
-                    $filters['storageRange'][$keyName] = $value;
-                }
+        $storageList = $this->groupByFieldWithCount('storage');
+
+        $storageData = [];
+        foreach ($storageList as $key => $value) {
+            $storageData[$key]['count'] = $value['count'];
+            $storageData[$key]['value'] = $value['title'];
+            $storageData[$key]['title'] = $value['title'];
+
+            if ($value['title'] >= 1000) {
+                $newTitle = round($value['title'] / 1000, 1) . 'TB';
+                $storageData[$key]['title'] = $newTitle;
             } else {
-                $filters['storageRange'][$key . 'GB'] = $value;
+                $storageData[$key]['title'] = $value['title'] . 'GB';
             }
         }
+        $filters[0]['data'] = $storageData;
+        $filters[0]['range'] = array_column($storageData, 'title');
 
         return $filters;
     }
 
 
+    /**
+     * return list of orders for filter
+     *
+     * @return void
+     */
     private function listOfOrderBy()
     {
         return [
-            'price-asc'    => 'Price - Low to High',
-            'price-desc'   => 'Price - High to Low',
-            'ram-asc'      => 'Ram - Low to High',
-            'ram-desc'     => 'Ram - High to Low',
-            'storage-asc'  => 'Storage - Low to High',
-            'storage-desc' => 'Storage - High to Low',
+            [
+                'title' => 'Price - Low to High',
+                'value' => 'price-asc',
+            ],
+            [
+                'title' => 'Price - High to Low',
+                'value' => 'price-desc',
+            ],
+            [
+                'title' => 'Ram - Low to High',
+                'value' => 'ram-asc',
+            ],
+            [
+                'title' => 'Ram - High to Low',
+                'value' => 'ram-desc',
+            ],
+            [
+                'title' => 'Storage - Low to High',
+                'value' => 'storage-asc',
+            ],
+            [
+                'title' => 'Storage - High to Low',
+                'value' => 'storage-desc',
+            ],
         ];
     }
 
@@ -474,25 +543,14 @@ class PricingRepository extends ServiceEntityRepository
             return null;
         }
 
-        // get result from db
-        $data = $this->createQueryBuilder('p')->select('p.' . $field, 'COUNT(p) as count')->groupBy('p.' . $field)->getQuery()->getResult();
-
-        if (is_array($data)) {
-            // get keys and values
-            $keys = array_column($data, $field);
-            $values = array_column($data, 'count');
-
-            // simplify array to value => count
-            $result = array_combine($keys, $values);
-
-            if ($sortArrayAsc) {
-                arsort($result);
-            }
-
-            // return result
-            return $result;
+        if ($field === 'location') {
+            // get result from db
+            $data = $this->createQueryBuilder('p')->select('p.' . $field . ' as value', 'COUNT(p) as count', 'MIN(p.city) as title')->groupBy('p.' . $field)->getQuery()->getResult();
+        } else {
+            // get result from db
+            $data = $this->createQueryBuilder('p')->select('p.' . $field . ' as title', 'COUNT(p) as count')->groupBy('p.' . $field)->getQuery()->getResult();
         }
 
-        return null;
+        return $data;
     }
 }
