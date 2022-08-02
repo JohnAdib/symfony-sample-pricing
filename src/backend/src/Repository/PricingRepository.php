@@ -409,13 +409,13 @@ class PricingRepository extends ServiceEntityRepository
     public function getFilters(): array
     {
         $filters = [
-            'brand'        => $this->groupByFieldWithCount('brand'),
+            'brand'        => $this->groupByFieldWithCount('brand', true),
             'ram'          => $this->groupByFieldWithCount('ram'),
             'ramRange'     => [],
             'storage'      => $this->groupByFieldWithCount('storage'),
             'storageRange' => [],
-            'storagetype'  => $this->groupByFieldWithCount('storagetype'),
-            'location'     => $this->groupByFieldWithCount('location'),
+            'storagetype'  => $this->groupByFieldWithCount('storagetype', true),
+            'location'     => $this->groupByFieldWithCount('location', true),
             'orderby'      => $this->listOfOrderBy()
         ];
 
@@ -446,12 +446,12 @@ class PricingRepository extends ServiceEntityRepository
     private function listOfOrderBy()
     {
         return [
-            'Price - Low to High'   => 'price-asc',
-            'Price - High to Low'   => 'price-desc',
-            'Ram - Low to High'     => 'ram-asc',
-            'Ram - High to Low'     => 'ram-desc',
-            'Storage - Low to High' => 'storage-asc',
-            'Storage - High to Low' => 'storage-desc',
+            'price-asc'    => 'Price - Low to High',
+            'price-desc'   => 'Price - High to Low',
+            'ram-asc'      => 'Ram - Low to High',
+            'ram-desc'     => 'Ram - High to Low',
+            'storage-asc'  => 'Storage - Low to High',
+            'storage-desc' => 'Storage - High to Low',
         ];
     }
 
@@ -462,7 +462,7 @@ class PricingRepository extends ServiceEntityRepository
      * @param  [type]     $field
      * @return array|null
      */
-    public function groupByFieldWithCount($field): ?array
+    public function groupByFieldWithCount($field, $sortArrayAsc = false): ?array
     {
         // limit groupby on some fields
         $field = match ($field) {
@@ -484,6 +484,10 @@ class PricingRepository extends ServiceEntityRepository
 
             // simplify array to value => count
             $result = array_combine($keys, $values);
+
+            if ($sortArrayAsc) {
+                arsort($result);
+            }
 
             // return result
             return $result;

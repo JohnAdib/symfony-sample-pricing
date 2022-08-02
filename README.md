@@ -160,5 +160,6 @@ The [PhpSpreadsheet](https://github.com/PHPOffice/PhpSpreadsheet) library is cho
 - [x] add link to MrAdib.com
 - [ ] show count of each filter for radio and checkbox
 - [ ] improve design of locations
+- [ ] get Lighthouse 100 score
 - [ ] change url params based on filters
 - [ ] read init state from url params
