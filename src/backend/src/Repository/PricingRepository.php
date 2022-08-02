@@ -408,15 +408,36 @@ class PricingRepository extends ServiceEntityRepository
     // get list of filters and return it
     public function getFilters(): array
     {
-        $filters =
-            [
-                'brand'       => $this->groupByFieldWithCount('brand'),
-                'ram'         => $this->groupByFieldWithCount('ram'),
-                'storage'     => $this->groupByFieldWithCount('storage'),
-                'storagetype' => $this->groupByFieldWithCount('storagetype'),
-                'location'    => $this->groupByFieldWithCount('location'),
-                'orderby'     => $this->listOfOrderBy()
-            ];
+        $filters = [
+            'brand'        => $this->groupByFieldWithCount('brand'),
+            'ram'          => $this->groupByFieldWithCount('ram'),
+            'ramRange'     => [],
+            'storage'      => $this->groupByFieldWithCount('storage'),
+            'storageRange' => [],
+            'storagetype'  => $this->groupByFieldWithCount('storagetype'),
+            'location'     => $this->groupByFieldWithCount('location'),
+            'orderby'      => $this->listOfOrderBy()
+        ];
+
+        // add ram range
+        foreach ($filters['ram'] as $key => $value) {
+            $filters['ramRange'][$key . 'GB'] = $value;
+        }
+
+        // add storage range
+        // $storageDefinedRange = [0, 250, 500, 1000, 2000, 3000, 4000, 8000, 12000, 24000, 48000, 72000];
+        foreach ($filters['storage'] as $key => $value) {
+            if ($key >= 1000) {
+                $keyName = round($key / 1000) . 'TB';
+                if (isset($filters['storageRange'][$keyName])) {
+                    $filters['storageRange'][$keyName] += $value;
+                } else {
+                    $filters['storageRange'][$keyName] = $value;
+                }
+            } else {
+                $filters['storageRange'][$key . 'GB'] = $value;
+            }
+        }
 
         return $filters;
     }

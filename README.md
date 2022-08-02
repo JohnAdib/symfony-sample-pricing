@@ -148,7 +148,7 @@ Finally, open IP address or point some URL to server. For temporary usage below 
 - [x] allow to filter all fileds together
 - [x] allow to sort output based on range values
 - [x] enable http cache to improve performance
-- [ ] return list of each filter with count of it via API
+- [x] return list of each filter with count of it via API
 
 ### Frontend Checklist
 
