@@ -176,19 +176,16 @@ class ApiPricingImportController extends AbstractController
 
         // price
         $price = $datarowObj?->{'4'};
-        if (!$price) {
-            // thrown error
+        if ($price) {
+
+            // get price amount
+            $amount = preg_replace('/[^0-9\.,]*/i', '', $price);
+            $args['price'] = floatval($amount);
+            // everything else is currency
+            $args['currency'] = str_replace($amount, '', $price);
         }
-        if (mb_substr($price, 0, 1) === '€') {
-            $args['currency'] = '€';
-            $args['price'] = floatval(mb_substr($price, 1));
-        } else if (mb_substr($price, 0, 1) === '$') {
-            $args['currency'] = '$';
-            $args['price'] = floatval(mb_substr($price, 1));
-        } else if (mb_substr($price, 0, 2) === 'S$') {
-            $args['currency'] = 'S$';
-            $args['price'] = floatval(mb_substr($price, 2));
-        }
+
+
 
         // filter array to remove empty values
         $args = array_filter($args);
