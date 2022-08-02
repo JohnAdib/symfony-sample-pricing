@@ -65,6 +65,14 @@ class ApiPricingImportController extends AbstractController
                 continue;
             }
 
+            // if this server with exactly this config and currency exist,
+            // only price is different
+            // so decide to skip next item
+            // 277 record is duplicate if we are enable this mode
+            if ($this->getPricingDuplicateRecordWithoutPriceCount($pricingObj, $doctrine)) {
+                continue;
+            }
+
             // create instance of doctrine entity
             $entityManager = $doctrine->getManager();
 
@@ -74,6 +82,35 @@ class ApiPricingImportController extends AbstractController
             // actually executes the queries
             $entityManager->flush();
         }
+    }
+
+
+    /**
+     * get count of duplicate record before this
+     *
+     * @param  \App\Entity\Pricing                   $pricingObj
+     * @param  \Doctrine\Persistence\ManagerRegistry $doctrine
+     * @return boolean
+     */
+    private function getPricingDuplicateRecordWithoutPriceCount(Pricing $pricingObj, ManagerRegistry $doctrine): bool
+    {
+        $repository = $doctrine->getRepository(Pricing::class);
+
+        $pricing = $repository->findBy([
+            'model'      => $pricingObj->getModel(),
+            'ram'        => $pricingObj->getRam(),
+            'ramtype'    => $pricingObj->getRamtype(),
+            'storagetxt' => $pricingObj->getStoragetxt(),
+            'location'   => $pricingObj->getLocation(),
+            'currency'   => $pricingObj->getCurrency(),
+        ]);
+
+        // if result is array, return the count of duplocate records
+        if (is_array($pricing)) {
+            return count($pricing);
+        }
+
+        return null;
     }
 
 
