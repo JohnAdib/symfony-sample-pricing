@@ -32,6 +32,65 @@ class PricingRepository extends ServiceEntityRepository
     }
 
 
+    /**
+     * add only unique records
+     *
+     * @param  \App\Entity\Pricing $entity
+     * @param  boolean             $flush
+     * @return void
+     */
+    public function addUniqueRecords(Pricing $entity, bool $flush = false): void
+    {
+        // if record is duplicated, dont need to insert, continue to next one
+        // in example excel data we have 13 duplicate record
+        // total before 486
+        // total after 473
+        if ($this->countByPricingDuplicateRecordCount($entity)) {
+            return;
+        }
+
+        $this->getEntityManager()->persist($entity);
+
+        if ($flush) {
+            $this->getEntityManager()->flush();
+        }
+    }
+
+
+    /**
+     * add only unique records
+     *
+     * @param  \App\Entity\Pricing $entity
+     * @param  boolean             $flush
+     * @return void
+     */
+    public function addUniqueRecordsWoPrice(Pricing $entity, bool $flush = false): void
+    {
+        // if record is duplicated, dont need to insert, continue to next one
+        // in example excel data we have 13 duplicate record
+        // total before 486
+        // total after 473
+        if ($this->countByPricingDuplicateRecordCount($entity)) {
+            return;
+        }
+
+        // if this server with exactly this config and currency exist,
+        // only price is different
+        // so decide to skip next item
+        // 277 record is duplicate if we are enable this mode
+        // total row before 473
+        // total row after 196
+        if ($this->countByPricingDuplicateRecordWithoutPriceCount($entity)) {
+            return;
+        }
+
+        $this->getEntityManager()->persist($entity);
+
+        if ($flush) {
+            $this->getEntityManager()->flush();
+        }
+    }
+
     public function remove(Pricing $entity, bool $flush = false): void
     {
         $this->getEntityManager()->remove($entity);
@@ -181,7 +240,6 @@ class PricingRepository extends ServiceEntityRepository
             }
         }
 
-
         // set sort mode - price acs by default
         $orderby = 'asc';
         if (isset($filters['orderby'])) {
@@ -235,7 +293,6 @@ class PricingRepository extends ServiceEntityRepository
         return $myQuery->getResult();
     }
 
-
     //    /**
     //     * @return Pricing[] Returns an array of Pricing objects
     //     */
@@ -260,6 +317,7 @@ class PricingRepository extends ServiceEntityRepository
     //            ->getOneOrNullResult()
     //        ;
     //    }
+
 
     /**
      * clear user input value to conver to int or change to lowercase
@@ -290,5 +348,59 @@ class PricingRepository extends ServiceEntityRepository
         }
 
         return $convertedVal;
+    }
+
+
+    /**
+     * get count of duplicate record before this
+     *
+     * @param  \App\Entity\Pricing $pricingObj
+     * @return boolean
+     */
+    private function countByPricingDuplicateRecordWithoutPriceCount(Pricing $pricingObj): bool
+    {
+
+        $pricing = $this->findBy([
+            'model'      => $pricingObj->getModel(),
+            'ram'        => $pricingObj->getRam(),
+            'ramtype'    => $pricingObj->getRamtype(),
+            'storagetxt' => $pricingObj->getStoragetxt(),
+            'location'   => $pricingObj->getLocation(),
+            'currency'   => $pricingObj->getCurrency(),
+        ]);
+
+        // if result is array, return the count of duplocate records
+        if (is_array($pricing)) {
+            return count($pricing);
+        }
+
+        return null;
+    }
+
+
+    /**
+     * get count of duplicate record before this
+     *
+     * @param  \App\Entity\Pricing $pricingObj
+     * @return boolean
+     */
+    private function countByPricingDuplicateRecordCount(Pricing $pricingObj): bool
+    {
+        $pricing = $this->findBy([
+            'model'      => $pricingObj->getModel(),
+            'ram'        => $pricingObj->getRam(),
+            'ramtype'    => $pricingObj->getRamtype(),
+            'storagetxt' => $pricingObj->getStoragetxt(),
+            'location'   => $pricingObj->getLocation(),
+            'currency'   => $pricingObj->getCurrency(),
+            'price'      => $pricingObj->getPrice(),
+        ]);
+
+        // if result is array, return the count of duplocate records
+        if (is_array($pricing)) {
+            return count($pricing);
+        }
+
+        return null;
     }
 }

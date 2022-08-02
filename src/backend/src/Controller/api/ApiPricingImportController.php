@@ -44,8 +44,11 @@ class ApiPricingImportController extends AbstractController
 
     private function insertDataIntoDb(array $datalist, ManagerRegistry $doctrine): void
     {
+        $entityManager = $doctrine->getManager();
+
+        $pricingRepo = $entityManager->getRepository(Pricing::class);
         // call removeAllRecords
-        $doctrine->getManager()->getRepository(Pricing::class)->removeAllRecords();
+        $pricingRepo->removeAllRecords();
 
         // remove header row
         $header = array_shift($datalist);
@@ -58,88 +61,8 @@ class ApiPricingImportController extends AbstractController
             // extract data and set fileds
             $pricingObj = $this->extractServerDetail($row, $value);
 
-            // if record is duplicated, dont need to insert, continue to next one
-            // in example excel data we have 13 duplicate record
-            if ($this->getPricingDuplicateRecordCount($pricingObj, $doctrine)) {
-                continue;
-            }
-
-            // if this server with exactly this config and currency exist,
-            // only price is different
-            // so decide to skip next item
-            // 277 record is duplicate if we are enable this mode
-            if ($this->getPricingDuplicateRecordWithoutPriceCount($pricingObj, $doctrine)) {
-                continue;
-            }
-
-            // create instance of doctrine entity
-            $entityManager = $doctrine->getManager();
-
-            // tell Doctrine you want to eventually save the Pricing
-            $entityManager->persist($pricingObj);
-
-            // actually executes the queries
-            $entityManager->flush();
+            $pricingRepo->addUniqueRecordsWoPrice($pricingObj, true);
         }
-    }
-
-
-    /**
-     * get count of duplicate record before this
-     *
-     * @param  \App\Entity\Pricing                   $pricingObj
-     * @param  \Doctrine\Persistence\ManagerRegistry $doctrine
-     * @return boolean
-     */
-    private function getPricingDuplicateRecordWithoutPriceCount(Pricing $pricingObj, ManagerRegistry $doctrine): bool
-    {
-        $repository = $doctrine->getRepository(Pricing::class);
-
-        $pricing = $repository->findBy([
-            'model'      => $pricingObj->getModel(),
-            'ram'        => $pricingObj->getRam(),
-            'ramtype'    => $pricingObj->getRamtype(),
-            'storagetxt' => $pricingObj->getStoragetxt(),
-            'location'   => $pricingObj->getLocation(),
-            'currency'   => $pricingObj->getCurrency(),
-        ]);
-
-        // if result is array, return the count of duplocate records
-        if (is_array($pricing)) {
-            return count($pricing);
-        }
-
-        return null;
-    }
-
-
-    /**
-     * get count of duplicate record before this
-     *
-     * @param  \App\Entity\Pricing                   $pricingObj
-     * @param  \Doctrine\Persistence\ManagerRegistry $doctrine
-     * @return boolean
-     */
-    private function getPricingDuplicateRecordCount(Pricing $pricingObj, ManagerRegistry $doctrine): bool
-    {
-        $repository = $doctrine->getRepository(Pricing::class);
-
-        $pricing = $repository->findBy([
-            'model'      => $pricingObj->getModel(),
-            'ram'        => $pricingObj->getRam(),
-            'ramtype'    => $pricingObj->getRamtype(),
-            'storagetxt' => $pricingObj->getStoragetxt(),
-            'location'   => $pricingObj->getLocation(),
-            'currency'   => $pricingObj->getCurrency(),
-            'price'      => $pricingObj->getPrice(),
-        ]);
-
-        // if result is array, return the count of duplocate records
-        if (is_array($pricing)) {
-            return count($pricing);
-        }
-
-        return null;
     }
 
 
@@ -207,8 +130,6 @@ class ApiPricingImportController extends AbstractController
             $args['storage'] = $hddCount * $hddEachCapacity;
         }
 
-
-
         // location
         if (isset($datarow[3])) {
             $location = $datarow[3];
@@ -227,8 +148,6 @@ class ApiPricingImportController extends AbstractController
             }
         }
 
-
-
         // price
         if (isset($datarow[4])) {
             $price = $datarow[4];
@@ -241,9 +160,6 @@ class ApiPricingImportController extends AbstractController
                 $args['currency'] = str_replace($amount, '', $price);
             }
         }
-
-
-
 
         // filter array to remove empty values
         $args = array_filter($args);
