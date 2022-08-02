@@ -403,4 +403,34 @@ class PricingRepository extends ServiceEntityRepository
 
         return null;
     }
+
+
+    public function getFilters(): array
+    {
+        $filters =
+            [
+                'brand'       => $this->groupBy('brand'),
+                'ram'         => $this->groupBy('ram'),
+                'storage'     => $this->groupBy('storage'),
+                'storagetype' => $this->groupBy('storagetype'),
+                'location'    => $this->groupBy('location'),
+            ];
+
+        return $filters;
+    }
+
+
+    public function groupBy($field): ?array
+    {
+        $field = match ($field) {
+            'brand', 'ram', 'ramtype', 'storage', 'storagetype', 'location', 'currency' => $field,
+            default => null
+        };
+
+        if (!$field) {
+            return null;
+        }
+
+        return $this->createQueryBuilder('p')->select('p.' . $field, 'COUNT(p) as count')->groupBy('p.' . $field)->getQuery()->getResult();
+    }
 }
