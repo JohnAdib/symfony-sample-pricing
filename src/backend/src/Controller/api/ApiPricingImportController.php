@@ -55,18 +55,55 @@ class ApiPricingImportController extends AbstractController
                 // skip first line, because contain headers
                 continue;
             }
+
             // extract data and set fileds
             $pricingObj = $this->extractServerDetail($row, $value);
+
+            // if record is duplicated, dont need to insert, continue to next one
+            // in example excel data we have 13 duplicate record
+            if ($this->getPricingDuplicateRecordCount($pricingObj, $doctrine)) {
+                continue;
+            }
 
             // create instance of doctrine entity
             $entityManager = $doctrine->getManager();
 
-            // tell Doctrine you want to (eventually) save the Product (no queries yet)
+            // tell Doctrine you want to eventually save the Pricing
             $entityManager->persist($pricingObj);
 
-            // actually executes the queries (i.e. the INSERT query)
+            // actually executes the queries
             $entityManager->flush();
         }
+    }
+
+
+    /**
+     * get count of duplicate record before this
+     *
+     * @param  \App\Entity\Pricing                   $pricingObj
+     * @param  \Doctrine\Persistence\ManagerRegistry $doctrine
+     * @return boolean
+     */
+    private function getPricingDuplicateRecordCount(Pricing $pricingObj, ManagerRegistry $doctrine): bool
+    {
+        $repository = $doctrine->getRepository(Pricing::class);
+
+        $pricing = $repository->findBy([
+            'model'      => $pricingObj->getModel(),
+            'ram'        => $pricingObj->getRam(),
+            'ramtype'    => $pricingObj->getRamtype(),
+            'storagetxt' => $pricingObj->getStoragetxt(),
+            'location'   => $pricingObj->getLocation(),
+            'currency'   => $pricingObj->getCurrency(),
+            'price'      => $pricingObj->getPrice(),
+        ]);
+
+        // if result is array, return the count of duplocate records
+        if (is_array($pricing)) {
+            return count($pricing);
+        }
+
+        return null;
     }
 
 

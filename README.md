@@ -135,7 +135,7 @@ Finally, open IP address or point some URL to server. For temporary usage below 
 - [x] empty table before new import
 - [x] add index to search fields
 - [x] extract important data from values and save inside new fields
-- [ ] check exactly duplicate records and only insert once
+- [x] check exactly duplicate records and only insert once - 13 duplicate in example
 - [ ] check duplicate record without price and only insert once
 - [x] allow access to import database after change Excel file - route via /import url
 - [x] route url for API to show result
