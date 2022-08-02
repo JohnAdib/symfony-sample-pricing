@@ -50,12 +50,14 @@ class ApiPricingImportController extends AbstractController
         // call removeAllRecords
         $doctrine->getManager()->getRepository(Pricing::class)->removeAllRecords();
 
-        foreach ($datalist as $row => $value) {
-            if ($row === 0) {
-                // skip first line, because contain headers
-                continue;
-            }
+        // remove header row
+        $header = array_shift($datalist);
 
+        // reverse array order to add last one, first
+        // because i think the last one is correct one and don't need old ones
+        $datalist = array_reverse($datalist);
+
+        foreach ($datalist as $row => $value) {
             // extract data and set fileds
             $pricingObj = $this->extractServerDetail($row, $value);
 

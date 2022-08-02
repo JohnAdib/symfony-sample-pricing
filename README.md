@@ -136,7 +136,7 @@ Finally, open IP address or point some URL to server. For temporary usage below 
 - [x] add index to search fields
 - [x] extract important data from values and save inside new fields
 - [x] check exactly duplicate records and only insert once - 13 duplicate in example
-- [ ] check duplicate record without price and only insert once
+- [x] check duplicate record without price and only insert once - 277 duplicate in example
 - [x] allow access to import database after change Excel file - route via /import url
 - [x] route url for API to show result
 - [x] successfully show list of servers
