@@ -153,7 +153,7 @@ The [PhpSpreadsheet](https://github.com/PHPOffice/PhpSpreadsheet) library is cho
 - [x] design loading state
 - [x] fetch servers data from API
 - [x] apply filters and get updated data
-- [ ] get list of filters from API
+- [x] get list of filters from API
 - [x] don't send request if user play with filters
 - [x] cancel last request if user changes filters
 - [x] add link to API page
