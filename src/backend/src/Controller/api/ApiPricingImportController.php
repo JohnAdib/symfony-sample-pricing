@@ -48,7 +48,7 @@ class ApiPricingImportController extends AbstractController
     private function insertDataIntoDb(array $datalist, ManagerRegistry $doctrine): void
     {
         // call removeAllRecords
-        $result = $doctrine->getManager()->getRepository(Pricing::class)->removeAllRecords();
+        $doctrine->getManager()->getRepository(Pricing::class)->removeAllRecords();
 
         foreach ($datalist as $row => $value) {
             if ($row === 0) {
@@ -56,29 +56,13 @@ class ApiPricingImportController extends AbstractController
                 continue;
             }
             // extract data and set fileds
-            $args = $this->extractServerDetail($row, $value);
-
-            // create new object from pricing
-            $pricing = new Pricing();
+            $pricingObj = $this->extractServerDetail($row, $value);
 
             // create instance of doctrine entity
             $entityManager = $doctrine->getManager();
 
-            foreach ($args as $key => $value) {
-
-                // @todo must check unique record and insert once
-                // in sample data we have 14 duplicate record
-                // i think it's good idea to add new field to save md5 of all fileds
-                // then check it before insert new record
-
-                // create name of method
-                $methodName = 'set' . ucfirst($key);
-                // call setSomefield fn with value
-                $pricing->{$methodName}($value);
-            }
-
             // tell Doctrine you want to (eventually) save the Product (no queries yet)
-            $entityManager->persist($pricing);
+            $entityManager->persist($pricingObj);
 
             // actually executes the queries (i.e. the INSERT query)
             $entityManager->flush();
@@ -86,19 +70,20 @@ class ApiPricingImportController extends AbstractController
     }
 
 
-    private function extractServerDetail($row, $dataline): array
+    /**
+     * create object from pricing to insert into db
+     *
+     * @param  integer             $row
+     * @param  array               $dataline
+     * @return \App\Entity\Pricing
+     */
+    private function extractServerDetail(int $row, array $dataline): Pricing
     {
-        var_dump($row);
-        var_dump($dataline);
-
         // define array to save values
         $args = [];
 
         // cast array to object to use nullsafe operator
         $datarowObj = (object) $dataline;
-
-        // index
-        // $args['index'] = $row;
 
         // model
         $args['model'] = $datarowObj?->{'0'};
@@ -174,9 +159,25 @@ class ApiPricingImportController extends AbstractController
         // if we detect less than 11 fields, data is not correct
         if (count($args) !== 11) {
             // error on data
-            throw new \Exception("ExcelData-NotExist - row " . $row);
+            throw new \Exception("ExcelData-DataProblem - row " . $row);
         }
 
-        return $args;
+        // create new object from pricing
+        $pricing = new Pricing();
+
+        foreach ($args as $key => $value) {
+
+            // @todo must check unique record and insert once
+            // in sample data we have 14 duplicate record
+            // i think it's good idea to add new field to save md5 of all fileds
+            // then check it before insert new record
+
+            // create name of method
+            $methodName = 'set' . ucfirst($key);
+            // call setSomefield fn with value
+            $pricing->{$methodName}($value);
+        }
+
+        return $pricing;
     }
 }
