@@ -64,7 +64,7 @@ class PricingRepository extends ServiceEntityRepository
      * @param  boolean             $flush
      * @return void
      */
-    public function addUniqueRecordsWoPrice(Pricing $entity, bool $flush = false): void
+    public function addUniqueRecordsSmartModeWoPrice(Pricing $entity, bool $flush = false): void
     {
         // if record is duplicated, dont need to insert, continue to next one
         // in example excel data we have 13 duplicate record

@@ -6,6 +6,7 @@ use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpKernel\KernelInterface;
+use Symfony\Component\HttpFoundation\Request;
 use Doctrine\Persistence\ManagerRegistry;
 use App\Entity\Pricing;
 use App\Lib\ReadFileExcel;
@@ -14,9 +15,14 @@ use App\Lib\ReadFileExcel;
 class ApiPricingImportController extends AbstractController
 {
     #[Route('/api/pricing/import', methods: ['GET', 'HEAD'])]
-    public function info(KernelInterface $kernel, ManagerRegistry $doctrine): JsonResponse
+    public function info(Request $request,  KernelInterface $kernel, ManagerRegistry $doctrine): JsonResponse
     {
         try {
+            $mode = match ($request->query->get('mode')) {
+                'duplicate' => 'duplicate',
+                default => 'smart'
+            };
+
             // get files url on remote and locatl
             // $url_excel_remote = $_ENV['EXCEL_URL'];
 
@@ -30,7 +36,7 @@ class ApiPricingImportController extends AbstractController
             $excelData = $excelReaderObj->fetchDataArray('Sheet2');
 
             // call insert fn on model
-            $this->insertDataIntoDb($excelData, $doctrine);
+            $this->insertDataIntoDb($excelData, $mode, $doctrine);
 
             // return json of result
             // return status 201 means created
@@ -42,11 +48,19 @@ class ApiPricingImportController extends AbstractController
     }
 
 
-    private function insertDataIntoDb(array $datalist, ManagerRegistry $doctrine): void
+    /**
+     * insert Excel datalist into database
+     *
+     * @param  array                                 $datalist
+     * @param  \Doctrine\Persistence\ManagerRegistry $doctrine
+     * @return void
+     */
+    private function insertDataIntoDb(array $datalist, string $mode, ManagerRegistry $doctrine): void
     {
         $entityManager = $doctrine->getManager();
 
         $pricingRepo = $entityManager->getRepository(Pricing::class);
+
         // call removeAllRecords
         $pricingRepo->removeAllRecords();
 
@@ -61,7 +75,13 @@ class ApiPricingImportController extends AbstractController
             // extract data and set fileds
             $pricingObj = $this->extractServerDetail($row, $value);
 
-            $pricingRepo->addUniqueRecordsWoPrice($pricingObj, true);
+            if ($mode === 'smart') {
+                // 196 record
+                $pricingRepo->addUniqueRecordsSmartModeWoPrice($pricingObj, true);
+            } else {
+                // 473 record
+                $pricingRepo->addUniqueRecords($pricingObj, true);
+            }
         }
     }
 
@@ -155,7 +175,7 @@ class ApiPricingImportController extends AbstractController
             // get price amount
             $amount = preg_replace('/[^0-9\.,]*/i', '', $price);
             if ($amount) {
-                $args['price'] = floatval($amount);
+                $args['price'] = floatval($amount) + 0;
                 // everything else is currency
                 $args['currency'] = str_replace($amount, '', $price);
             }
