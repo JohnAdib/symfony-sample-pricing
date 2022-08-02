@@ -551,6 +551,13 @@ class PricingRepository extends ServiceEntityRepository
             $data = $this->createQueryBuilder('p')->select('p.' . $field . ' as title', 'COUNT(p) as count')->groupBy('p.' . $field)->getQuery()->getResult();
         }
 
+        // if needed sort array
+        if ($sortArrayAsc) {
+            usort($data, function ($a, $b) {
+                return $b['count'] <=> $a['count'];
+            });
+        }
+
         return $data;
     }
 }
