@@ -186,7 +186,6 @@ class ApiPricingImportController extends AbstractController
 
         // if we detect less than 11 fields, data is not correct
         if (count($args) !== 11) {
-            var_dump($args);
             // error on data
             throw new \Exception("ExcelData-DataProblem - row " . $row);
         }
