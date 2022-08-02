@@ -50,88 +50,13 @@ class ApiPricingImportController extends AbstractController
         // call removeAllRecords
         $result = $doctrine->getManager()->getRepository(Pricing::class)->removeAllRecords();
 
-        foreach ($datalist as $row => $dataline) {
+        foreach ($datalist as $row => $value) {
             if ($row === 0) {
                 // skip first line, because contain headers
                 continue;
             }
-
-            // define array to save values
-            $args = [];
-
-            // cast array to object to use nullsafe operator
-            $datarowObj = (object) $dataline;
-
-            // index
-            // $args['index'] = $row;
-
-            // model
-            $args['model'] = $datarowObj?->{'0'};
-
-            // brand
-            $args['brand'] = strtok($args['model'], ' ');
-
-            // ram
-            $ramTxt          = $datarowObj?->{'1'};
-            $args['ram']     = intval(strtok($ramTxt, 'G'));
-            $args['ramtype'] = substr($ramTxt, strlen($args['ram']) + 2);
-
-            // storage
-            $hddTxt = $datarowObj?->{'2'};
-            $args['storagetxt'] = $hddTxt;
-            // extract storage type
-            if (substr($hddTxt, -5) === 'SATA2') {
-                $hddTxt = substr($hddTxt, 0, -5);
-                $args['storagetype'] = 'SATA';
-            } else if (substr($hddTxt, -3) === 'SSD') {
-                $hddTxt = substr($hddTxt, 0, -3);
-                $args['storagetype'] = 'SSD';
-            } else if (substr($hddTxt, -3) === 'SAS') {
-                $hddTxt = substr($hddTxt, 0, -3);
-                $args['storagetype'] = 'SAS';
-            }
-            // extract hdd count
-            $hddCount = intval(strtok($hddTxt, 'x'));
-            // calc each capacity
-            $hddTxt = substr($hddTxt, strpos($hddTxt, 'x') + 1);
-            if (substr($hddTxt, -2) === 'TB') {
-                $hddEachCapacity = intval(substr($hddTxt, 0, -2)) * 1000;
-            } else if (substr($hddTxt, -2) === 'GB') {
-                $hddEachCapacity = intval(substr($hddTxt, 0, -2));
-            }
-            // calc totalCapacity
-            if (!is_int($hddCount) || !is_int($hddEachCapacity)) {
-                // count or capacity is not int
-                // thrown error
-            }
-            $args['storage'] = $hddCount * $hddEachCapacity;
-
-            // location
-            $location = $datarowObj?->{'3'};
-            // extract location code
-            $locationCode = substr($location, -2);
-            // extract location iso
-            $locationIso = substr($location, strpos($location, '-') - 3, 3);
-            // extract location cityName
-            $args['city'] = substr($location, 0, strpos($location, '-') - 3);
-            // extract location zone
-            $args['location'] = $locationIso . '-' . $locationCode;
-
-            // price
-            $price = $datarowObj?->{'4'};
-            if (!$price) {
-                // thrown error
-            }
-            if (mb_substr($price, 0, 1) === '€') {
-                $args['currency'] = '€';
-                $args['price'] = floatval(mb_substr($price, 1));
-            } else if (mb_substr($price, 0, 1) === '$') {
-                $args['currency'] = '$';
-                $args['price'] = floatval(mb_substr($price, 1));
-            } else if (mb_substr($price, 0, 2) === 'S$') {
-                $args['currency'] = 'S$';
-                $args['price'] = floatval(mb_substr($price, 2));
-            }
+            // extract data and set fileds
+            $args = $this->extractServerDetail($row, $value);
 
             // create new object from pricing
             $pricing = new Pricing();
@@ -139,25 +64,17 @@ class ApiPricingImportController extends AbstractController
             // create instance of doctrine entity
             $entityManager = $doctrine->getManager();
 
-            if (count($args) === 11) {
-                foreach ($args as $key => $value) {
-                    if (!$value) {
-                        throw new \Exception("ExcelData-NotExist - row " . $row . ' - ' . $key);
-                    }
+            foreach ($args as $key => $value) {
 
-                    // @todo must check unique record and insert once
-                    // in sample data we have 14 duplicate record
-                    // i think it's good idea to add new field to save md5 of all fileds
-                    // then check it before insert new record
+                // @todo must check unique record and insert once
+                // in sample data we have 14 duplicate record
+                // i think it's good idea to add new field to save md5 of all fileds
+                // then check it before insert new record
 
-                    // create name of method
-                    $methodName = 'set' . ucfirst($key);
-                    // call setSomefield fn with value
-                    $pricing->{$methodName}($value);
-                }
-            } else {
-                // error on data
-                throw new \Exception("ExcelData-NotExist - row " . $row);
+                // create name of method
+                $methodName = 'set' . ucfirst($key);
+                // call setSomefield fn with value
+                $pricing->{$methodName}($value);
             }
 
             // tell Doctrine you want to (eventually) save the Product (no queries yet)
@@ -166,5 +83,100 @@ class ApiPricingImportController extends AbstractController
             // actually executes the queries (i.e. the INSERT query)
             $entityManager->flush();
         }
+    }
+
+
+    private function extractServerDetail($row, $dataline): array
+    {
+        var_dump($row);
+        var_dump($dataline);
+
+        // define array to save values
+        $args = [];
+
+        // cast array to object to use nullsafe operator
+        $datarowObj = (object) $dataline;
+
+        // index
+        // $args['index'] = $row;
+
+        // model
+        $args['model'] = $datarowObj?->{'0'};
+
+        // brand
+        $args['brand'] = strtok($args['model'], ' ');
+
+        // ram
+        $ramTxt          = $datarowObj?->{'1'};
+        $args['ram']     = intval(strtok($ramTxt, 'G'));
+        $args['ramtype'] = substr($ramTxt, strlen($args['ram']) + 2);
+
+        // storage
+        $hddTxt = $datarowObj?->{'2'};
+        $args['storagetxt'] = $hddTxt;
+        // extract storage type
+        if (substr($hddTxt, -5) === 'SATA2') {
+            $hddTxt = substr($hddTxt, 0, -5);
+            $args['storagetype'] = 'SATA';
+        } else if (substr($hddTxt, -3) === 'SSD') {
+            $hddTxt = substr($hddTxt, 0, -3);
+            $args['storagetype'] = 'SSD';
+        } else if (substr($hddTxt, -3) === 'SAS') {
+            $hddTxt = substr($hddTxt, 0, -3);
+            $args['storagetype'] = 'SAS';
+        }
+        // extract hdd count
+        $hddCount = intval(strtok($hddTxt, 'x'));
+        // calc each capacity
+        $hddTxt = substr($hddTxt, strpos($hddTxt, 'x') + 1);
+        if (substr($hddTxt, -2) === 'TB') {
+            $hddEachCapacity = intval(substr($hddTxt, 0, -2)) * 1000;
+        } else if (substr($hddTxt, -2) === 'GB') {
+            $hddEachCapacity = intval(substr($hddTxt, 0, -2));
+        }
+        // calc totalCapacity
+        if (!is_int($hddCount) || !is_int($hddEachCapacity)) {
+            // count or capacity is not int
+            // thrown error
+        }
+        $args['storage'] = $hddCount * $hddEachCapacity;
+
+        // location
+        $location = $datarowObj?->{'3'};
+        // extract location code
+        $locationCode = substr($location, -2);
+        // extract location iso
+        $locationIso = substr($location, strpos($location, '-') - 3, 3);
+        // extract location cityName
+        $args['city'] = substr($location, 0, strpos($location, '-') - 3);
+        // extract location zone
+        $args['location'] = $locationIso . '-' . $locationCode;
+
+        // price
+        $price = $datarowObj?->{'4'};
+        if (!$price) {
+            // thrown error
+        }
+        if (mb_substr($price, 0, 1) === '€') {
+            $args['currency'] = '€';
+            $args['price'] = floatval(mb_substr($price, 1));
+        } else if (mb_substr($price, 0, 1) === '$') {
+            $args['currency'] = '$';
+            $args['price'] = floatval(mb_substr($price, 1));
+        } else if (mb_substr($price, 0, 2) === 'S$') {
+            $args['currency'] = 'S$';
+            $args['price'] = floatval(mb_substr($price, 2));
+        }
+
+        // filter array to remove empty values
+        $args = array_filter($args);
+
+        // if we detect less than 11 fields, data is not correct
+        if (count($args) !== 11) {
+            // error on data
+            throw new \Exception("ExcelData-NotExist - row " . $row);
+        }
+
+        return $args;
     }
 }
