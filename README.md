@@ -169,3 +169,5 @@ The [PhpSpreadsheet](https://github.com/PHPOffice/PhpSpreadsheet) library is cho
 - [x] get Lighthouse 100 score
 - [ ] change url params based on filters
 - [ ] read init state from url params
+
+![UI](documents/ui.gif?raw=true "UI")
