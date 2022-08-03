@@ -424,7 +424,7 @@ class PricingRepository extends ServiceEntityRepository
             ],
             [
                 'type'  => 'range',
-                'title' => 'Ram',
+                'title' => 'Memory',
                 'name'  => 'ram',
                 'data'  => []
             ],
@@ -484,6 +484,20 @@ class PricingRepository extends ServiceEntityRepository
         }
         $filters[0]['data'] = $storageData;
         $filters[0]['range'] = array_column($storageData, 'title');
+
+
+        // add condition to change ram from range to checkbox
+        // this is example to show we can change everything from backend
+        if (isset($_GET['input-ram'])) {
+            $switchRam = $_GET['input-ram'];
+
+            if ($switchRam === 'checkbox' || $switchRam === 'radio') {
+                $filters[1]['type'] = $switchRam;
+            } else if ($switchRam === 'dropdown') {
+                $filters[1]['type'] = $switchRam;
+                array_unshift($filters[1]['data'], ['title' => 'All', 'value' => '']);
+            }
+        }
 
         return $filters;
     }
