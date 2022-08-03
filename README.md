@@ -27,13 +27,19 @@ Tests is categorized as Unit test and Functional Test. So you can run each one o
 
 ```php bin/phpunit```
 
-### Run All Unit tests
+![PHPUnit Tests](documents/phpunit-tests.jpg?raw=true|width=400px "PHPUnit Tests")
+
+### Run Unit tests
 
 ```php bin/phpunit tests/Unit```
 
-### Run All Functional tests
+![PHPUnit Tests](documents/phpunit-tests-unit.jpg?raw=true|width=400px "PHPUnit Tests")
+
+### Run Functional tests
 
 ```php bin/phpunit tests/Functional```
+
+![PHPUnit Tests](documents/phpunit-tests-functional.jpg?raw=true|width=400px "PHPUnit Tests")
 
 ## Install Dependencies - Docker & git
 
@@ -160,6 +166,6 @@ The [PhpSpreadsheet](https://github.com/PHPOffice/PhpSpreadsheet) library is cho
 - [x] add link to MrAdib.com
 - [ ] show count of each filter for radio and checkbox
 - [ ] improve design of locations
-- [ ] get Lighthouse 100 score
+- [x] get Lighthouse 100 score
 - [ ] change url params based on filters
 - [ ] read init state from url params
